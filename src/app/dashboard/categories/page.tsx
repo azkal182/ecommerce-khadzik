@@ -59,7 +59,7 @@ export default function CategoriesPage() {
         const data = await response.json();
 
         // Transform data to match the expected interface
-        const transformedCategories: CategoryWithProductCount[] = data.map((category: any) => ({
+        const transformedCategories: CategoryWithProductCount[] = data.map((category: CategoryWithProductCount) => ({
           id: category.id,
           slug: category.slug,
           name: category.name,

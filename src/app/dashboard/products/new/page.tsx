@@ -196,7 +196,7 @@ export default function AddProductPage() {
     }));
   };
 
-  const updateOptionType = (typeId: string, field: 'name' | 'values', value: any) => {
+  const updateOptionType = (typeId: string, field: 'name' | 'values', value: unknown) => {
     setFormData(prev => ({
       ...prev,
       optionTypes: prev.optionTypes.map(type =>
@@ -285,7 +285,7 @@ export default function AddProductPage() {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleInputChange = (field: keyof ProductFormData, value: any) => {
+  const handleInputChange = (field: keyof ProductFormData, value: unknown) => {
     setFormData(prev => ({ ...prev, [field]: value }));
     if (errors[field]) {
       setErrors(prev => ({ ...prev, [field]: "" }));
@@ -293,11 +293,12 @@ export default function AddProductPage() {
 
     // Auto-update variant prices when base price changes and there are no option types
     if (field === 'basePrice' && formData.optionTypes.length === 0 && formData.variants.length > 0) {
+      const numValue = value as number;
       setFormData(prev => ({
         ...prev,
         variants: prev.variants.map(variant => ({
           ...variant,
-          priceAbsolute: value
+          priceAbsolute: numValue
         }))
       }));
     }

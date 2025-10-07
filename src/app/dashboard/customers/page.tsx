@@ -67,7 +67,7 @@ export default function CustomersPage() {
         const data = await response.json();
 
         // Transform data to match the expected interface
-        const transformedCustomers: Customer[] = data.map((customer: any) => ({
+        const transformedCustomers: Customer[] = data.map((customer: Customer) => ({
           id: customer.id,
           name: customer.name,
           email: customer.email,

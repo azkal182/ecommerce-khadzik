@@ -157,40 +157,7 @@ async function main() {
     },
   });
 
-  const sportsStore = await prisma.store.create({
-    data: {
-      slug: 'sports-central',
-      name: 'Sports Central',
-      description: 'Get geared up with our premium sports equipment and activewear. From professional gear to everyday fitness essentials, we have everything for your active lifestyle.',
-      theme: {
-        primary: '#dc2626',
-        secondary: '#b91c1c',
-        bg: '#fef2f2',
-        fg: '#7f1d1d',
-        accent: '#ef4444',
-      },
-      waNumber: '628778991122',
-      isActive: true,
-    },
-  });
-
-  const watchesStore = await prisma.store.create({
-    data: {
-      slug: 'timepieces',
-      name: 'Luxury Timepieces',
-      description: 'Explore our collection of premium timepieces. From classic analog designs to modern smartwatches, find the perfect watch for every occasion.',
-      theme: {
-        primary: '#000000',
-        secondary: '#1f2937',
-        bg: '#f9fafb',
-        fg: '#111827',
-        accent: '#fbbf24',
-      },
-      waNumber: '628987654321',
-      isActive: true,
-    },
-  });
-
+  
   console.log('🏪 Created stores');
 
   // Assign Store Roles
@@ -221,8 +188,8 @@ async function main() {
       categories: [shirtsCategory.id, formalCategory.id],
     },
     {
-      'name': 'Graphic Hoodie',
-      'slug': 'graphic-hoodie',
+      name: 'Graphic Hoodie',
+      slug: 'graphic-hoodie',
       description: 'Cozy hoodie with stylish graphic print, perfect for casual wear',
       basePrice: 325000,
       categories: [hoodiesCategory.id],
@@ -261,6 +228,223 @@ async function main() {
       description: 'Professional running shoes with advanced cushioning technology',
       basePrice: 675000,
       categories: [shoesCategory.id, sportsCategory.id],
+    },
+    {
+      name: 'Polo Shirt Classic',
+      slug: 'polo-shirt-classic',
+      description: 'Classic polo shirt with embroidered logo, perfect for semi-formal occasions',
+      basePrice: 195000,
+      categories: [shirtsCategory.id],
+    },
+    {
+      name: 'V-Neck Sweater',
+      slug: 'vneck-sweater',
+      description: 'Comfortable v-neck sweater made from premium wool blend',
+      basePrice: 375000,
+      categories: [hoodiesCategory.id],
+    },
+    {
+      name: 'Chino Pants',
+      slug: 'chino-pants',
+      description: 'Versatile chino pants perfect for office and casual wear',
+      basePrice: 425000,
+      categories: [pantsCategory.id],
+    },
+    {
+      name: 'Cargo Shorts',
+      slug: 'cargo-shorts',
+      description: 'Functional cargo shorts with multiple pockets',
+      basePrice: 225000,
+      categories: [shortsCategory.id],
+    },
+    {
+      name: 'Leather Jacket',
+      slug: 'leather-jacket',
+      description: 'Premium leather jacket with classic styling',
+      basePrice: 1250000,
+      categories: [jacketsCategory.id],
+    },
+    {
+      name: 'Crossbody Bag',
+      slug: 'crossbody-bag',
+      description: 'Stylish crossbody bag with adjustable strap',
+      basePrice: 325000,
+      categories: [bagsCategory.id, accessoriesCategory.id],
+    },
+    {
+      name: 'Sneakers Sport',
+      slug: 'sneakers-sport',
+      description: 'Comfortable sport sneakers with modern design',
+      basePrice: 550000,
+      categories: [shoesCategory.id],
+    },
+    {
+      name: 'Long Sleeve Tee',
+      slug: 'long-sleeve-tee',
+      description: 'Comfortable long sleeve t-shirt for casual wear',
+      basePrice: 145000,
+      categories: [tshirtsCategory.id],
+    },
+    {
+      name: 'Oxford Shirt',
+      slug: 'oxford-shirt',
+      description: 'Premium oxford shirt for professional settings',
+      basePrice: 325000,
+      categories: [shirtsCategory.id, formalCategory.id],
+    },
+    {
+      name: 'Zip-up Hoodie',
+      slug: 'zip-up-hoodie',
+      description: 'Comfortable zip-up hoodie with front pockets',
+      basePrice: 355000,
+      categories: [hoodiesCategory.id],
+    },
+    {
+      name: 'Skinny Jeans',
+      slug: 'skinny-jeans',
+      description: 'Trendy skinny jeans with stretch comfort',
+      basePrice: 475000,
+      categories: [jeansCategory.id, pantsCategory.id],
+    },
+    {
+      name: 'Board Shorts',
+      slug: 'board-shorts',
+      description: 'Quick-dry board shorts for beach activities',
+      basePrice: 195000,
+      categories: [shortsCategory.id, sportsCategory.id],
+    },
+    {
+      name: 'Bomber Jacket',
+      slug: 'bomber-jacket',
+      description: 'Modern bomber jacket with ribbed cuffs',
+      basePrice: 595000,
+      categories: [jacketsCategory.id],
+    },
+    {
+      name: 'Tote Bag Large',
+      slug: 'tote-bag-large',
+      description: 'Spacious tote bag perfect for work and shopping',
+      basePrice: 275000,
+      categories: [bagsCategory.id, accessoriesCategory.id],
+    },
+    {
+      name: 'Loafers Classic',
+      slug: 'loafers-classic',
+      description: 'Classic leather loafers for formal occasions',
+      basePrice: 725000,
+      categories: [shoesCategory.id, formalCategory.id],
+    },
+    {
+      name: 'Henley Shirt',
+      slug: 'henley-shirt',
+      description: 'Stylish henley shirt with button placket',
+      basePrice: 165000,
+      categories: [tshirtsCategory.id, shirtsCategory.id],
+    },
+    {
+      name: 'Flannel Shirt',
+      slug: 'flannel-shirt',
+      description: 'Warm flannel shirt perfect for cold weather',
+      basePrice: 285000,
+      categories: [shirtsCategory.id],
+    },
+    {
+      name: 'Pullover Sweater',
+      slug: 'pullover-sweater',
+      description: 'Cozy pullover sweater for winter wear',
+      basePrice: 395000,
+      categories: [hoodiesCategory.id],
+    },
+    {
+      name: 'Relaxed Fit Jeans',
+      slug: 'relaxed-fit-jeans',
+      description: 'Comfortable relaxed fit jeans for all-day wear',
+      basePrice: 425000,
+      categories: [jeansCategory.id, pantsCategory.id],
+    },
+    {
+      name: 'Bermuda Shorts',
+      slug: 'bermuda-shorts',
+      description: 'Classic bermuda shorts for summer casual',
+      basePrice: 185000,
+      categories: [shortsCategory.id],
+    },
+    {
+      name: 'Windbreaker Jacket',
+      slug: 'windbreaker-jacket',
+      description: 'Lightweight windbreaker perfect for outdoor activities',
+      basePrice: 425000,
+      categories: [jacketsCategory.id, sportsCategory.id],
+    },
+    {
+      name: 'Clutch Bag Evening',
+      slug: 'clutch-bag-evening',
+      description: 'Elegant clutch bag for special occasions',
+      basePrice: 425000,
+      categories: [bagsCategory.id, accessoriesCategory.id],
+    },
+    {
+      name: 'Boots Ankle',
+      slug: 'boots-ankle',
+      description: 'Stylish ankle boots for all seasons',
+      basePrice: 825000,
+      categories: [shoesCategory.id],
+    },
+    {
+      name: 'Tank Top Basic',
+      slug: 'tank-top-basic',
+      description: 'Basic tank top perfect for layering',
+      basePrice: 95000,
+      categories: [tshirtsCategory.id],
+    },
+    {
+      name: 'Dress Shirt White',
+      slug: 'dress-shirt-white',
+      description: 'Classic white dress shirt for formal wear',
+      basePrice: 355000,
+      categories: [shirtsCategory.id, formalCategory.id],
+    },
+    {
+      name: 'Sweatshirt Crewneck',
+      slug: 'sweatshirt-crewneck',
+      description: 'Classic crewneck sweatshirt for casual comfort',
+      basePrice: 295000,
+      categories: [hoodiesCategory.id],
+    },
+    {
+      name: 'Bootcut Jeans',
+      slug: 'bootcut-jeans',
+      description: 'Classic bootcut jeans with slight flare',
+      basePrice: 455000,
+      categories: [jeansCategory.id, pantsCategory.id],
+    },
+    {
+      name: 'Denim Shorts',
+      slug: 'denim-shorts',
+      description: 'Classic denim shorts for summer style',
+      basePrice: 205000,
+      categories: [shortsCategory.id, jeansCategory.id],
+    },
+    {
+      name: 'Leather Biker Jacket',
+      slug: 'leather-biker-jacket',
+      description: 'Edgy leather biker jacket with metal hardware',
+      basePrice: 1450000,
+      categories: [jacketsCategory.id],
+    },
+    {
+      name: 'Waist Bag Sport',
+      slug: 'waist-bag-sport',
+      description: 'Sporty waist bag for hands-free convenience',
+      basePrice: 185000,
+      categories: [bagsCategory.id, accessoriesCategory.id],
+    },
+    {
+      name: 'High Top Sneakers',
+      slug: 'high-top-sneakers',
+      description: 'Classic high-top sneakers with retro style',
+      basePrice: 625000,
+      categories: [shoesCategory.id],
     },
   ];
 
@@ -323,6 +507,230 @@ async function main() {
       basePrice: 10999000,
       categories: [electronicsCategory.id],
     },
+    {
+      name: 'Gaming Console Pro',
+      slug: 'gaming-console-pro',
+      description: 'Next-generation gaming console with 4K graphics and ray tracing',
+      basePrice: 8999000,
+      categories: [electronicsCategory.id, smartCategory.id],
+    },
+    {
+      name: 'Drone Camera 4K',
+      slug: 'drone-camera-4k',
+      description: 'Professional drone with 4K camera and GPS stabilization',
+      basePrice: 12499000,
+      categories: [electronicsCategory.id],
+    },
+    {
+      name: 'Action Camera Hero',
+      slug: 'action-camera-hero',
+      description: 'Waterproof action camera with 4K recording and image stabilization',
+      basePrice: 4299000,
+      categories: [electronicsCategory.id, sportsCategory.id],
+    },
+    {
+      name: 'Smart Speaker Hub',
+      slug: 'smart-speaker-hub',
+      description: 'Voice-controlled smart speaker with home automation features',
+      basePrice: 2299000,
+      categories: [electronicsCategory.id, smartCategory.id],
+    },
+    {
+      name: 'Wireless Charger Premium',
+      slug: 'wireless-charger-premium',
+      description: 'Fast wireless charger with multiple device support',
+      basePrice: 899000,
+      categories: [electronicsCategory.id],
+    },
+    {
+      name: 'Fitness Tracker Band',
+      slug: 'fitness-tracker-band',
+      description: 'Advanced fitness tracker with heart rate monitoring',
+      basePrice: 1999000,
+      categories: [electronicsCategory.id, smartCategory.id, sportsCategory.id],
+    },
+    {
+      name: 'Gaming Headset RGB',
+      slug: 'gaming-headset-rgb',
+      description: 'Professional gaming headset with 7.1 surround sound',
+      basePrice: 1899000,
+      categories: [electronicsCategory.id],
+    },
+    {
+      name: 'Smart TV 55" OLED',
+      slug: 'smart-tv-55-oled',
+      description: 'Premium OLED smart TV with 4K resolution and HDR',
+      basePrice: 18999000,
+      categories: [electronicsCategory.id],
+    },
+    {
+      name: 'Bluetooth Speaker Portable',
+      slug: 'bluetooth-speaker-portable',
+      description: 'Waterproof portable speaker with 360-degree sound',
+      basePrice: 1599000,
+      categories: [electronicsCategory.id],
+    },
+    {
+      name: 'VR Headset Pro',
+      slug: 'vr-headset-pro',
+      description: 'Virtual reality headset with hand tracking and haptic feedback',
+      basePrice: 9999000,
+      categories: [electronicsCategory.id, smartCategory.id],
+    },
+    {
+      name: 'Power Bank 20000mAh',
+      slug: 'power-bank-20000mah',
+      description: 'High-capacity power bank with fast charging support',
+      basePrice: 699000,
+      categories: [electronicsCategory.id],
+    },
+    {
+      name: 'Smart Home Hub',
+      slug: 'smart-home-hub',
+      description: 'Central hub for smart home devices and automation',
+      basePrice: 2799000,
+      categories: [electronicsCategory.id, smartCategory.id],
+    },
+    {
+      name: 'Digital Camera Mirrorless',
+      slug: 'digital-camera-mirrorless',
+      description: 'Professional mirrorless camera with 4K video recording',
+      basePrice: 22999000,
+      categories: [electronicsCategory.id],
+    },
+    {
+      name: 'Gaming Keyboard Mechanical',
+      slug: 'gaming-keyboard-mechanical',
+      description: 'RGB mechanical gaming keyboard with programmable keys',
+      basePrice: 1799000,
+      categories: [electronicsCategory.id],
+    },
+    {
+      name: 'Gaming Mouse Wireless',
+      slug: 'gaming-mouse-wireless',
+      description: 'High-precision wireless gaming mouse with customizable DPI',
+      basePrice: 1499000,
+      categories: [electronicsCategory.id],
+    },
+    {
+      name: 'Monitor Gaming 27"',
+      slug: 'monitor-gaming-27',
+      description: '27-inch gaming monitor with 144Hz refresh rate and 1ms response',
+      basePrice: 6999000,
+      categories: [electronicsCategory.id],
+    },
+    {
+      name: 'Smart Door Lock',
+      slug: 'smart-door-lock',
+      description: 'Keyless smart door lock with app control and biometric access',
+      basePrice: 3299000,
+      categories: [electronicsCategory.id, smartCategory.id],
+    },
+    {
+      name: 'Security Camera WiFi',
+      slug: 'security-camera-wifi',
+      description: 'WiFi security camera with night vision and motion detection',
+      basePrice: 1299000,
+      categories: [electronicsCategory.id],
+    },
+    {
+      name: 'Smart Light Bulbs Set',
+      slug: 'smart-light-bulbs-set',
+      description: 'RGB smart light bulbs with app control and scheduling',
+      basePrice: 899000,
+      categories: [electronicsCategory.id, smartCategory.id],
+    },
+    {
+      name: 'Smart Thermostat',
+      slug: 'smart-thermostat',
+      description: 'Energy-saving smart thermostat with learning algorithms',
+      basePrice: 2499000,
+      categories: [electronicsCategory.id, smartCategory.id],
+    },
+    {
+      name: 'Wireless Router Mesh',
+      slug: 'wireless-router-mesh',
+      description: 'Mesh WiFi router system for whole home coverage',
+      basePrice: 3499000,
+      categories: [electronicsCategory.id],
+    },
+    {
+      name: 'Smart Watch Sport',
+      slug: 'smart-watch-sport',
+      description: 'GPS-enabled smartwatch for fitness and outdoor activities',
+      basePrice: 4499000,
+      categories: [electronicsCategory.id, smartCategory.id, watchesCategory.id, sportsCategory.id],
+    },
+    {
+      name: 'Tablet Keyboard Case',
+      slug: 'tablet-keyboard-case',
+      description: 'Protective case with built-in keyboard for tablets',
+      basePrice: 1299000,
+      categories: [electronicsCategory.id],
+    },
+    {
+      name: 'Webcam HD Pro',
+      slug: 'webcam-hd-pro',
+      description: '1080p HD webcam with auto-focus and noise reduction',
+      basePrice: 899000,
+      categories: [electronicsCategory.id],
+    },
+    {
+      name: 'USB-C Hub Multiport',
+      slug: 'usb-c-hub-multiport',
+      description: 'Multi-port USB-C hub with HDMI, USB 3.0, and SD card reader',
+      basePrice: 699000,
+      categories: [electronicsCategory.id],
+    },
+    {
+      name: 'Smart Scale Digital',
+      slug: 'smart-scale-digital',
+      description: 'Digital scale with body composition analysis and app sync',
+      basePrice: 999000,
+      categories: [electronicsCategory.id, smartCategory.id],
+    },
+    {
+      name: 'Phone Camera Lens Kit',
+      slug: 'phone-camera-lens-kit',
+      description: 'Professional lens kit for smartphone photography',
+      basePrice: 799000,
+      categories: [electronicsCategory.id],
+    },
+    {
+      name: 'Smart Water Bottle',
+      slug: 'smart-water-bottle',
+      description: 'Hydration tracking water bottle with temperature control',
+      basePrice: 1299000,
+      categories: [electronicsCategory.id, smartCategory.id],
+    },
+    {
+      name: 'Laptop Stand Adjustable',
+      slug: 'laptop-stand-adjustable',
+      description: 'Ergonomic laptop stand with adjustable height and angle',
+      basePrice: 499000,
+      categories: [electronicsCategory.id],
+    },
+    {
+      name: 'Smart Alarm Clock',
+      slug: 'smart-alarm-clock',
+      description: 'WiFi-enabled alarm clock with sleep tracking and sunrise simulation',
+      basePrice: 899000,
+      categories: [electronicsCategory.id, smartCategory.id],
+    },
+    {
+      name: 'External SSD 1TB',
+      slug: 'external-ssd-1tb',
+      description: 'Portable external SSD with fast transfer speeds',
+      basePrice: 1999000,
+      categories: [electronicsCategory.id],
+    },
+    {
+      name: 'Smart Plug Outlet',
+      slug: 'smart-plug-outlet',
+      description: 'WiFi-enabled smart plug with energy monitoring',
+      basePrice: 399000,
+      categories: [electronicsCategory.id, smartCategory.id],
+    },
   ];
 
   const createdTechProducts = [];
@@ -347,118 +755,11 @@ async function main() {
     createdTechProducts.push(createdProduct);
   }
 
-  // Create Products for Sports Store
-  const sportsProducts = [
-    {
-      name: 'Professional Yoga Mat',
-      slug: 'professional-yoga-mat',
-      description: 'Extra thick yoga mat with superior grip and cushioning',
-      basePrice: 185000,
-      categories: [sportsCategory.id],
-    },
-    {
-      name: 'Resistance Bands Set',
-      slug: 'resistance-bands-set',
-      description: 'Complete set of resistance bands for full-body workouts',
-      basePrice: 275000,
-      categories: [sportsCategory.id],
-    },
-    {
-      name: 'Dumbbells Pair',
-      slug: 'dumbbells-pair',
-      description: 'Adjustable dumbbells with ergonomic grip design',
-      basePrice: 425000,
-      categories: [sportsCategory.id],
-    },
-    {
-      name: 'Jump Rope Pro',
-      slug: 'jump-rope-pro',
-      description: 'Professional speed rope with digital counter and smooth rotation',
-      basePrice: 95000,
-      categories: [sportsCategory.id],
-    },
-  ];
-
-  const createdSportsProducts = [];
-  for (const productData of sportsProducts) {
-    const { categories, ...product } = productData;
-    const createdProduct = await prisma.product.create({
-      data: {
-        ...product,
-        storeId: sportsStore.id,
-        status: ProductStatus.ACTIVE,
-      },
-    });
-
-    // Connect categories
-    await prisma.productCategory.createMany({
-      data: categories.map(categoryId => ({
-        productId: createdProduct.id,
-        categoryId,
-      })),
-    });
-
-    createdSportsProducts.push(createdProduct);
-  }
-
-  // Create Products for Watches Store
-  const watchProducts = [
-    {
-      name: 'Classic Analog Watch',
-      slug: 'classic-analog-watch',
-      description: 'Timeless analog watch with genuine leather strap',
-      basePrice: 3250000,
-      categories: [watchesCategory.id, analogCategory.id],
-    },
-    {
-      name: 'Smart Watch Series 8',
-      slug: 'smart-watch-series-8',
-      description: 'Advanced smartwatch with health monitoring and GPS tracking',
-      basePrice: 5999000,
-      categories: [watchesCategory.id, smartCategory.id, digitalCategory.id],
-    },
-    {
-      name: 'Digital Sport Watch',
-      slug: 'digital-sport-watch',
-      description: 'Feature-rich digital watch with fitness tracking capabilities',
-      basePrice: 2450000,
-      categories: [watchesCategory.id, digitalCategory.id, sportsCategory.id],
-    },
-    {
-      name: 'Luxury Automatic Watch',
-      'slug': 'luxury-automatic-watch',
-      description: 'Premium automatic movement watch with sapphire crystal',
-      basePrice: 12999000,
-      categories: [watchesCategory.id, analogCategory.id],
-    },
-  ];
-
-  const createdWatchProducts = [];
-  for (const productData of watchProducts) {
-    const { categories, ...product } = productData;
-    const createdProduct = await prisma.product.create({
-      data: {
-        ...product,
-        storeId: watchesStore.id,
-        status: ProductStatus.ACTIVE,
-      },
-    });
-
-    // Connect categories
-    await prisma.productCategory.createMany({
-      data: categories.map(categoryId => ({
-        productId: createdProduct.id,
-        categoryId,
-      })),
-    });
-
-    createdWatchProducts.push(createdProduct);
-  }
-
+  
   console.log('📦 Created products');
 
   // Add product images
-  for (const product of [...createdFashionProducts, ...createdTechProducts, ...createdSportsProducts, ...createdWatchProducts]) {
+  for (const product of [...createdFashionProducts, ...createdTechProducts]) {
     await prisma.productImage.createMany({
       data: [
         {
@@ -551,50 +852,95 @@ async function main() {
 
   console.log('🎨 Created variants for clothing products');
 
-  // Create variant options for watch products
-  for (const product of createdWatchProducts) {
-    // Create Band Material option type
-    const bandOptionType = await prisma.variantOptionType.create({
-      data: {
-        productId: product.id,
-        name: 'Band Material',
-      },
-    });
-
-    // Create band material values
-    await prisma.variantOptionValue.createMany({
-      data: [
-        { typeId: bandOptionType.id, name: 'Leather' },
-        { typeId: bandOptionType.id, name: 'Steel' },
-        { typeId: bandOptionType.id, name: 'Silicone' },
-      ],
-    });
-
-    // Get the created values for variant creation
-    const createdBandValues = await prisma.variantOptionValue.findMany({
-      where: { typeId: bandOptionType.id },
-    });
-
-    // Create variants
-    for (const band of createdBandValues) {
-      const variant = await prisma.variant.create({
+  
+  // Create variant options for tech products
+  for (const product of createdTechProducts) {
+    // Create variants for specific tech products that benefit from variations
+    if (product.slug.includes('smartphone') || product.slug.includes('laptop') || product.slug.includes('tablet')) {
+      // Create Storage option type
+      const storageOptionType = await prisma.variantOptionType.create({
         data: {
           productId: product.id,
-          sku: `${product.slug}-${band.id}`,
-          priceDelta: band.name === 'Leather' ? 100000 : band.name === 'Steel' ? 150000 : 0,
-          stock: Math.floor(Math.random() * 10) + 3, // Random stock between 3-13
+          name: 'Storage',
         },
       });
 
-      // Link option value to variant
-      await prisma.variantOptionValue.update({
-        where: { id: band.id },
-        data: { variantId: variant.id },
+      // Create Color option type
+      const colorOptionType = await prisma.variantOptionType.create({
+        data: {
+          productId: product.id,
+          name: 'Color',
+        },
       });
+
+      // Create storage values
+      await prisma.variantOptionValue.createMany({
+        data: product.slug.includes('smartphone')
+          ? [
+              { typeId: storageOptionType.id, name: '128GB' },
+              { typeId: storageOptionType.id, name: '256GB' },
+              { typeId: storageOptionType.id, name: '512GB' },
+            ]
+          : [
+              { typeId: storageOptionType.id, name: '256GB' },
+              { typeId: storageOptionType.id, name: '512GB' },
+              { typeId: storageOptionType.id, name: '1TB' },
+            ],
+      });
+
+      // Create color values
+      await prisma.variantOptionValue.createMany({
+        data: [
+          { typeId: colorOptionType.id, name: 'Space Gray' },
+          { typeId: colorOptionType.id, name: 'Silver' },
+          { typeId: colorOptionType.id, name: 'Midnight Blue' },
+        ],
+      });
+
+      // Get the created values for variant creation
+      const createdStorageValues = await prisma.variantOptionValue.findMany({
+        where: { typeId: storageOptionType.id },
+      });
+      const createdColorValues = await prisma.variantOptionValue.findMany({
+        where: { typeId: colorOptionType.id },
+      });
+
+      // Create variants (combinations of storage and color)
+      const variantCombinations = [];
+      for (const storage of createdStorageValues) {
+        for (const color of createdColorValues) {
+          variantCombinations.push([storage.id, color.id]);
+        }
+      }
+
+      for (const [storageId, colorId] of variantCombinations) {
+        // Calculate price delta based on storage
+        let priceDelta = 0;
+        const storage = createdStorageValues.find(s => s.id === storageId);
+        if (storage?.name.includes('512')) priceDelta = 2000000;
+        else if (storage?.name.includes('1TB')) priceDelta = 5000000;
+        else if (storage?.name.includes('256')) priceDelta = 1000000;
+
+        const variant = await prisma.variant.create({
+          data: {
+            productId: product.id,
+            sku: `${product.slug}-${storageId}-${colorId}`,
+            priceAbsolute: product.basePrice,
+            priceDelta: priceDelta,
+            stock: Math.floor(Math.random() * 15) + 3, // Random stock between 3-18
+          },
+        });
+
+        // Link option values to variant
+        await prisma.variantOptionValue.updateMany({
+          where: { id: { in: [storageId, colorId] } },
+          data: { variantId: variant.id },
+        });
+      }
     }
   }
 
-  console.log('⌚ Created variants for watch products');
+  console.log('💻 Created variants for tech products');
 
   // Create Discounts
   // Store-scoped discount for clothing
@@ -621,7 +967,7 @@ async function main() {
       stackable: false,
       startAt: new Date(),
       endAt: new Date(Date.now() + 15 * 24 * 60 * 60 * 1000), // 15 days from now
-      productId: createdWatchProducts[0].id,
+      productId: createdTechProducts[0].id,
     },
   });
 
@@ -643,11 +989,16 @@ async function main() {
   console.log('✅ Seed completed successfully!');
   console.log('\n📊 Summary:');
   console.log(`- Users: 3`);
-  console.log(`- Stores: 4`);
+  console.log(`- Stores: 2`);
   console.log(`- Categories: 20`);
-  console.log(`- Products: ${createdFashionProducts.length + createdTechProducts.length + createdSportsProducts.length + createdWatchProducts.length}`);
-  console.log(`- Variants: ${createdFashionProducts.length * 9 + createdTechProducts.length * 3 + createdSportsProducts.length * 3 + createdWatchProducts.length * 3}`);
+  console.log(`- Products: ${createdFashionProducts.length + createdTechProducts.length}`);
+  console.log(`- Fashion Store Products: ${createdFashionProducts.length}`);
+  console.log(`- Tech Hub Products: ${createdTechProducts.length}`);
+  console.log(`- Variants: ${createdFashionProducts.length * 9 + createdTechProducts.filter(p => p.slug.includes('smartphone') || p.slug.includes('laptop') || p.slug.includes('tablet')).length * 9}`);
   console.log(`- Discounts: 3`);
+  console.log('\n🏪 Stores:');
+  console.log(`- Fashion Store (fashion-store): Fashion and apparel products`);
+  console.log(`- Tech Hub (tech-hub): Electronics and gadgets`);
   console.log('\n🔑 Login credentials:');
   console.log(`- Owner: owner@example.com / password123`);
   console.log(`- Editor: editor@example.com / password123`);

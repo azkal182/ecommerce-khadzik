@@ -32,6 +32,7 @@ interface DashboardStats {
 interface ActivityItem {
   id: string;
   type: "order" | "product" | "customer" | "store";
+  title?: string;
   description: string;
   timestamp: string;
   amount?: number;
@@ -91,6 +92,7 @@ export default function DashboardOverview() {
           totalStores: data.totalStores,
           totalProducts: data.totalProducts,
           totalOrders: data.totalCustomers, // Using customers as proxy for orders
+          totalCustomers: data.totalCustomers || 0,
           totalRevenue: data.totalStock * 100000, // Approximate revenue
           recentActivity: [
             {
@@ -264,18 +266,18 @@ export default function DashboardOverview() {
                 <div className="flex items-center mt-4 text-sm">
                   {stat.changeType === "positive" ? (
                     <TrendingUp className="h-4 w-4 text-green-500 mr-1" />
-                  ) : stat.changeType === "negative" ? (
-                    <TrendingDown className="h-4 w-4 text-red-500 mr-1" />
-                  ) : (
+                  ) : stat.changeType === "neutral" ? (
                     <div className="h-4 w-4 mr-1" />
+                  ) : (
+                    <TrendingDown className="h-4 w-4 text-red-500 mr-1" />
                   )}
                   <span
                     className={
                       stat.changeType === "positive"
                         ? "text-green-600"
-                        : stat.changeType === "negative"
-                        ? "text-red-600"
-                        : "text-gray-600"
+                        : stat.changeType === "neutral"
+                        ? "text-gray-600"
+                        : "text-red-600"
                     }
                   >
                     {stat.change} from last month

@@ -116,7 +116,7 @@ export default function EditProductPage() {
           basePrice: productData.basePrice,
           status: productData.status,
           images: productData.images || [],
-          categories: productData.categories?.map((cat: any) => cat.id) || [],
+          categories: productData.categories?.map((cat: Category) => cat.id) || [],
           optionTypes: productData.optionTypes || [],
           variants: productData.variants || []
         };
@@ -172,7 +172,7 @@ export default function EditProductPage() {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleInputChange = (field: keyof ProductFormData, value: any) => {
+  const handleInputChange = (field: keyof ProductFormData, value: unknown) => {
     setFormData(prev => ({ ...prev, [field]: value }));
     if (errors[field]) {
       setErrors(prev => ({ ...prev, [field]: "" }));
@@ -238,7 +238,7 @@ export default function EditProductPage() {
     }));
   };
 
-  const updateOptionType = (id: string, field: 'name' | 'values', value: any) => {
+  const updateOptionType = (id: string, field: 'name' | 'values', value: unknown) => {
     setFormData(prev => ({
       ...prev,
       optionTypes: prev.optionTypes.map(type =>
@@ -375,7 +375,7 @@ export default function EditProductPage() {
     }
   };
 
-  const updateVariant = (index: number, field: keyof ProductVariant, value: any) => {
+  const updateVariant = (index: number, field: keyof ProductVariant, value: unknown) => {
     const newVariants = [...formData.variants];
     newVariants[index] = { ...newVariants[index], [field]: value };
     setFormData(prev => ({ ...prev, variants: newVariants }));

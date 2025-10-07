@@ -43,7 +43,7 @@ export async function GET(request: NextRequest) {
     const storeId = searchParams.get("storeId");
     const categoryId = searchParams.get("categoryId");
 
-    const where: any = {};
+    const where: Record<string, unknown> = {};
 
     if (search) {
       where.OR = [
@@ -148,7 +148,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Check if any variant SKU already exists (only check provided SKUs)
-    const providedSkus = validatedData.variants.map(v => v.sku).filter(Boolean);
+    const providedSkus = validatedData.variants?.map(v => v.sku).filter((sku): sku is string => Boolean(sku)) || [];
     if (providedSkus.length > 0) {
       const existingVariantSkus = await prisma.variant.findMany({
         where: {

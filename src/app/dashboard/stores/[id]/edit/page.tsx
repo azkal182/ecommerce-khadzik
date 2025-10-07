@@ -58,11 +58,21 @@ interface Store {
   };
 }
 
-export default function EditStorePage({ params }: { params: { id: string } }) {
+export default function EditStorePage({ params }: { params: Promise<{ id: string }> }) {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const [isLoadingStore, setIsLoadingStore] = useState(true);
   const [store, setStore] = useState<Store | null>(null);
+  const [id, setId] = useState<string>("");
+
+  // Resolve the params promise
+  useEffect(() => {
+    const resolveParams = async () => {
+      const resolvedParams = await params;
+      setId(resolvedParams.id);
+    };
+    resolveParams();
+  }, [params]);
   const [formData, setFormData] = useState<StoreFormData>({
     name: "",
     slug: "",
@@ -81,8 +91,10 @@ export default function EditStorePage({ params }: { params: { id: string } }) {
   // Fetch store data
   useEffect(() => {
     const fetchStore = async () => {
+      if (!id) return; // Don't fetch until id is available
+
       try {
-        const response = await fetch(`/api/dashboard/stores/${params.id}`);
+        const response = await fetch(`/api/dashboard/stores/${id}`);
         if (!response.ok) {
           throw new Error("Failed to fetch store");
         }
@@ -105,7 +117,7 @@ export default function EditStorePage({ params }: { params: { id: string } }) {
     };
 
     fetchStore();
-  }, [params.id, router]);
+  }, [id, router]);
 
   const handleInputChange = (field: keyof StoreFormData, value: string | boolean) => {
     setFormData(prev => ({
@@ -138,7 +150,7 @@ export default function EditStorePage({ params }: { params: { id: string } }) {
     setIsLoading(true);
 
     try {
-      const response = await fetch(`/api/dashboard/stores/${params.id}`, {
+      const response = await fetch(`/api/dashboard/stores/${id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -174,7 +186,7 @@ export default function EditStorePage({ params }: { params: { id: string } }) {
     }
 
     try {
-      const response = await fetch(`/api/dashboard/stores/${params.id}`, {
+      const response = await fetch(`/api/dashboard/stores/${id}`, {
         method: "DELETE",
       });
 
@@ -224,7 +236,7 @@ export default function EditStorePage({ params }: { params: { id: string } }) {
       <div className="max-w-4xl mx-auto space-y-6">
         <div className="text-center py-12">
           <h1 className="text-2xl font-bold text-gray-900 mb-2">Store not found</h1>
-          <p className="text-gray-600 mb-4">The store you're looking for doesn't exist.</p>
+          <p className="text-gray-600 mb-4">The store you&apos;re looking for doesn&apos;t exist.</p>
           <Link href="/dashboard/stores">
             <Button>Back to Stores</Button>
           </Link>

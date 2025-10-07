@@ -205,7 +205,7 @@ export default function StoresPage() {
         {searchTerm && filteredStores.length > 0 && (
           <div className="text-center mt-8">
             <p className="text-gray-600">
-              Found {filteredStores.length} store{filteredStores.length !== 1 ? 's' : ''} matching "{searchTerm}"
+              Found {filteredStores.length} store{filteredStores.length !== 1 ? "s" : ""} matching &quot;{searchTerm}&quot;
             </p>
             <Button
               variant="outline"
@@ -222,10 +222,10 @@ export default function StoresPage() {
       <div className="bg-gray-900 text-white py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-3xl font-bold mb-4">
-            Can't Find What You're Looking For?
+            Can&apos;t Find What You&apos;re Looking For?
           </h2>
           <p className="text-xl text-gray-300 mb-8">
-            We're constantly adding new stores and products. Check back soon or contact us for special requests.
+            We&apos;re constantly adding new stores and products. Check back soon or contact us for special requests.
           </p>
           <div className="flex justify-center space-x-4">
             <Button size="lg" variant="outline" className="border-white text-white hover:bg-white hover:text-gray-900">

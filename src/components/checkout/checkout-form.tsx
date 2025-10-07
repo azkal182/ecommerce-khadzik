@@ -29,6 +29,18 @@ interface CustomerFormData {
   paymentMethod: "bank_transfer" | "dana" | "gopay";
 }
 
+interface FormErrors {
+  name?: string;
+  email?: string;
+  phone?: string;
+  province?: string;
+  regency?: string;
+  district?: string;
+  village?: string;
+  postalCode?: string;
+  paymentMethod?: string;
+}
+
 interface CheckoutFormProps {
   store: CartStore;
   onSubmit: (customerData: CustomerFormData) => Promise<void>;
@@ -49,7 +61,7 @@ export function CheckoutForm({ store, onSubmit, onCancel, isSubmitting }: Checko
     paymentMethod: "bank_transfer"
   });
 
-  const [errors, setErrors] = useState<Partial<CustomerFormData>>({});
+  const [errors, setErrors] = useState<FormErrors>({});
 
   const formatPrice = (price: number) => {
     return new Intl.NumberFormat("id-ID", {
@@ -60,7 +72,7 @@ export function CheckoutForm({ store, onSubmit, onCancel, isSubmitting }: Checko
   };
 
   const validateForm = () => {
-    const newErrors: Partial<CustomerFormData> = {};
+    const newErrors: FormErrors = {};
 
     if (!formData.name.trim()) newErrors.name = "Name is required";
     if (!formData.email.trim()) newErrors.email = "Email is required";

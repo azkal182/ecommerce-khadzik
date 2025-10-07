@@ -86,7 +86,7 @@ export default function ProductDetailClient({
 
       if (hasAllOtherOptions || Object.keys(selectedOptions).length === 0) {
         variant.optionValues
-          .filter(ov => ov.typeId === optionTypeId)
+          .filter(ov => ov.type.id === optionTypeId)
           .forEach(ov => availableValues.add(ov.id));
       }
     });
@@ -113,7 +113,12 @@ export default function ProductDetailClient({
         basePrice: product.basePrice,
         images: product.images,
         store: product.store,
-        variants: product.variants
+        variants: product.variants.map(v => ({
+          id: v.id,
+          sku: v.sku || `SKU-${v.id}`,
+          priceAbsolute: v.priceAbsolute,
+          priceDelta: v.priceDelta || undefined
+        }))
       }
     );
   };

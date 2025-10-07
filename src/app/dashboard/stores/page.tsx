@@ -64,7 +64,7 @@ export default function StoresPage() {
         const data = await response.json();
 
         // Transform data to match the expected interface
-        const transformedStores: StoreWithProductCount[] = data.map((store: any) => ({
+        const transformedStores: StoreWithProductCount[] = data.map((store: StoreWithProductCount) => ({
           id: store.id,
           slug: store.slug,
           name: store.name,

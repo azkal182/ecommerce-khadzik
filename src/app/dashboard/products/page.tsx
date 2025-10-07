@@ -113,7 +113,7 @@ export default function ProductsPage() {
         const data = await response.json();
 
         // Transform data to match the expected interface
-        const transformedProducts: Product[] = data.map((product: any) => ({
+        const transformedProducts: Product[] = data.map((product: Product) => ({
           id: product.id,
           name: product.name,
           slug: product.slug,

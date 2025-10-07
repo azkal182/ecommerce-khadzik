@@ -190,7 +190,7 @@ export async function PUT(
     const existingVariantSkus = await prisma.variant.findMany({
       where: {
         sku: {
-          in: validatedData.variants.map(v => v.sku).filter(Boolean)
+          in: validatedData.variants?.map(v => v.sku).filter((sku): sku is string => Boolean(sku)) || []
         },
         productId: {
           not: id

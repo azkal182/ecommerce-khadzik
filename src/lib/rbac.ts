@@ -105,7 +105,7 @@ export function hasMinimumRole(user: { role?: Role }, minimumRole: Role): boolea
     OWNER: 2,
   };
 
-  const userRoleLevel = roleHierarchy[user?.role] ?? 0;
+  const userRoleLevel = user?.role ? roleHierarchy[user.role] : 0;
   const requiredRoleLevel = roleHierarchy[minimumRole];
 
   return userRoleLevel >= requiredRoleLevel;

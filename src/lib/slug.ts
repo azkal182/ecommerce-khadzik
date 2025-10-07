@@ -58,7 +58,7 @@ async function findEntityBySlug(
   slug: string,
   type: 'product' | 'store' | 'category',
   excludeId?: string
-): Promise<any> {
+): Promise<{ id: string; slug: string } | null> {
   switch (type) {
     case 'product':
       return await prisma.product.findFirst({

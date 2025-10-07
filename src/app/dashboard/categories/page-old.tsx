@@ -38,12 +38,18 @@ interface CategoryWithProductCount {
   id: string;
   slug: string;
   name: string;
+  description?: string;
   isActive: boolean;
   createdAt: Date;
   updatedAt: Date;
   _count: {
     products: number;
   };
+  store?: {
+    id: string;
+    name: string;
+    slug: string;
+  } | null;
 }
 
 export default function CategoriesPage() {
