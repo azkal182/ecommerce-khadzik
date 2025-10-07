@@ -1,0 +1,177 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// enums
+enum Role {
+  OWNER
+  EDITOR
+  VIEWER
+}
+
+enum DiscountScope {
+  GLOBAL
+  STORE
+  PRODUCT
+  VARIANT
+}
+
+enum DiscountType {
+  PERCENT
+  FIXED
+}
+
+enum ProductStatus {
+  DRAFT
+  ACTIVE
+  ARCHIVED
+}
+
+model User {
+  id         String      @id @default(cuid())
+  email      String      @unique
+  password   String
+  role       Role        @default(VIEWER)
+  storeRoles StoreRole[]
+  createdAt  DateTime    @default(now())
+  updatedAt  DateTime    @updatedAt
+}
+
+model Store {
+  id          String     @id @default(cuid())
+  slug        String     @unique
+  name        String
+  description String?
+  theme       Json       // CSS tokens for theming
+  waNumber    String     // e.g., "62812xxxxxxx" (no plus sign)
+  isActive    Boolean    @default(true)
+  products    Product[]
+  discounts   Discount[] // STORE scoped
+  storeRoles  StoreRole[]
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+}
+
+model StoreRole {
+  id      String @id @default(cuid())
+  store   Store  @relation(fields: [storeId], references: [id])
+  storeId String
+  user    User   @relation(fields: [userId], references: [id])
+  userId  String
+  role    Role
+  @@unique([storeId, userId])
+}
+
+model Category {
+  id       String            @id @default(cuid())
+  name     String
+  slug     String            @unique
+  products ProductCategory[]
+}
+
+model Product {
+  id            String              @id @default(cuid())
+  store         Store               @relation(fields: [storeId], references: [id])
+  storeId       String
+  name          String
+  slug          String              @unique
+  description   String?
+  basePrice     Int                 // IDR (rupiah)
+  status        ProductStatus       @default(ACTIVE)
+  images        ProductImage[]
+  // Structured variant attributes
+  optionTypes   VariantOptionType[]
+  variants      Variant[]
+  categories    ProductCategory[]
+  discounts     Discount[]          // PRODUCT scoped
+  createdAt     DateTime            @default(now())
+  updatedAt     DateTime            @updatedAt
+}
+
+model ProductImage {
+  id        String  @id @default(cuid())
+  product   Product @relation(fields: [productId], references: [id])
+  productId String
+  url       String
+  alt       String?
+  order     Int     @default(0)
+}
+
+model ProductCategory {
+  product   Product  @relation(fields: [productId], references: [id])
+  productId String
+  category  Category @relation(fields: [categoryId], references: [id])
+  categoryId String
+  @@id([productId, categoryId])
+}
+
+// Structured attributes
+model VariantOptionType {
+  id        String   @id @default(cuid())
+  product   Product  @relation(fields: [productId], references: [id])
+  productId String
+  name      String   // e.g., "Color", "Size"
+  // Values available for this type in the product context
+  values    VariantOptionValue[]
+}
+
+model VariantOptionValue {
+  id        String            @id @default(cuid())
+  type      VariantOptionType @relation(fields: [typeId], references: [id])
+  typeId    String
+  name      String            // e.g., "Blue", "XL"
+  // Optional link to a concrete Variant (when a combination is materialized)
+  variant   Variant?          @relation(fields: [variantId], references: [id])
+  variantId String?
+}
+
+model Variant {
+  id            String  @id @default(cuid())
+  product       Product @relation(fields: [productId], references: [id])
+  productId     String
+  sku           String? @unique
+  priceAbsolute Int     @default(0) // Specific price for this variant
+  priceDelta    Int?    // Optional price difference from base
+  stock         Int     @default(0)
+  // A Variant is defined by a set of option values (one per option type).
+  optionValues  VariantOptionValue[]
+  discounts     Discount[] // VARIANT scoped
+}
+
+model Discount {
+  id        String        @id @default(cuid())
+  scope     DiscountScope
+  type      DiscountType
+  value     Int           // percent: 10 -> 10%; fixed: 20000 -> Rp 20,000
+  priority  Int           @default(100)  // lower = earlier
+  stackable Boolean       @default(false)
+  startAt   DateTime?
+  endAt     DateTime?
+  // Optional scoping
+  store     Store?   @relation(fields: [storeId], references: [id])
+  storeId   String?
+  product   Product? @relation(fields: [productId], references: [id])
+  productId String?
+  variant   Variant? @relation(fields: [variantId], references: [id])
+  variantId String?
+}
+
+model Event {
+  id        String   @id @default(cuid())
+  ts        DateTime @default(now())
+  sessionId String
+  type      String   // "view_product" | "add_to_cart" | "open_whatsapp" | ...
+  storeId   String?
+  productId String?
+  variantId String?
+  meta      Json?
+  utm       Json?
+}
