@@ -8,6 +8,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { ArrowLeft, ShoppingCart, Plus, Minus, Check } from "lucide-react";
 import { Header } from "@/components/layout/header";
+import MarkdownRenderer from "@/components/ui/markdown-renderer";
 import { useCart } from "@/contexts/cart-context";
 import type { Product, Store, ProductImage, Category, VariantOptionType, Variant } from "@prisma/client";
 
@@ -215,7 +216,11 @@ export default function ProductDetailClient({
                 {formatPrice(finalPrice)}
               </div>
               {product.description && (
-                <p className="text-gray-600 mb-6">{product.description}</p>
+                <div className="mb-6 prose prose-sm sm:prose-base max-w-none text-gray-600">
+                  <MarkdownRenderer
+                    content={product.description}
+                  />
+                </div>
               )}
             </div>
 

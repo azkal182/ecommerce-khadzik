@@ -16,6 +16,7 @@ import {
 } from "@/components/ui/select";
 import { Search, Filter, Grid, List, ShoppingCart } from "lucide-react";
 import { Header } from "@/components/layout/header";
+import MarkdownRenderer from "@/components/ui/markdown-renderer";
 import { useCart } from "@/contexts/cart-context";
 import type { Store, Product, Category } from "@prisma/client";
 
@@ -122,9 +123,9 @@ export default function StoreClientPage({
 
       {/* Store Header */}
       <div className="bg-white shadow-sm">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          <div className="flex items-center justify-between">
-            <div>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-4 sm:space-y-0">
+            <div className="flex-1">
               <nav className="text-sm text-gray-500 mb-2">
                 <Link href="/" className="hover:text-gray-700">
                   Home
@@ -132,31 +133,32 @@ export default function StoreClientPage({
                 <span className="mx-2">/</span>
                 <span className="text-gray-900">{store.name}</span>
               </nav>
-              <h1 className="text-3xl font-bold text-gray-900">{store.name}</h1>
+              <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">{store.name}</h1>
               {store.description && (
-                <p className="text-gray-600 mt-2 max-w-2xl">
+                <p className="text-gray-600 mt-2 text-sm sm:text-base max-w-2xl">
                   {store.description}
                 </p>
               )}
-              <p className="text-gray-500 mt-2">
+              <p className="text-gray-500 mt-2 text-sm sm:text-base">
                 {totalProducts} products available
               </p>
             </div>
-            <div className="flex items-center space-x-4">
+            <div className="flex items-center space-x-2 sm:space-x-4">
               <Button
                 variant="outline"
                 size="sm"
                 onClick={() => setShowFilters(!showFilters)}
+                className="flex items-center"
               >
-                <Filter className="h-4 w-4 mr-2" />
-                Filters
+                <Filter className="h-4 w-4 mr-1 sm:mr-2" />
+                <span className="hidden sm:inline">Filters</span>
               </Button>
               <div className="flex border rounded-md">
                 <Button
                   variant={viewMode === "grid" ? "default" : "ghost"}
                   size="sm"
                   onClick={() => setViewMode("grid")}
-                  className="rounded-r-none"
+                  className="rounded-r-none px-2 sm:px-3"
                 >
                   <Grid className="h-4 w-4" />
                 </Button>
@@ -164,7 +166,7 @@ export default function StoreClientPage({
                   variant={viewMode === "list" ? "default" : "ghost"}
                   size="sm"
                   onClick={() => setViewMode("list")}
-                  className="rounded-l-none"
+                  className="rounded-l-none px-2 sm:px-3"
                 >
                   <List className="h-4 w-4" />
                 </Button>
@@ -174,17 +176,27 @@ export default function StoreClientPage({
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="flex gap-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
+        <div className="flex flex-col lg:flex-row gap-6 lg:gap-8">
           {/* Filters Sidebar */}
           <div
             className={`${
               showFilters ? "block" : "hidden"
-            } lg:block w-64 flex-shrink-0`}
+            } lg:block w-full lg:w-64 flex-shrink-0 order-2 lg:order-1`}
           >
             <Card>
-              <CardContent className="p-6">
-                <h3 className="font-semibold text-lg mb-4">Filters</h3>
+              <CardContent className="p-4 sm:p-6">
+                <div className="flex justify-between items-center mb-4">
+                  <h3 className="font-semibold text-base sm:text-lg">Filters</h3>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => setShowFilters(false)}
+                    className="lg:hidden"
+                  >
+                    ✕
+                  </Button>
+                </div>
 
                 {/* Search */}
                 <form onSubmit={handleSearch} className="mb-6">
@@ -291,31 +303,40 @@ export default function StoreClientPage({
           </div>
 
           {/* Products Grid */}
-          <div className="flex-1">
+          <div className="flex-1 order-1 lg:order-2">
             {products.length === 0 ? (
-              <div className="text-center py-12">
-                <div className="text-gray-400 text-6xl mb-4">📦</div>
-                <h3 className="text-lg font-medium text-gray-900 mb-2">
+              <div className="text-center py-8 sm:py-12">
+                <div className="text-gray-400 text-4xl sm:text-6xl mb-4">📦</div>
+                <h3 className="text-base sm:text-lg font-medium text-gray-900 mb-2">
                   No products found
                 </h3>
-                <p className="text-gray-600">
+                <p className="text-sm sm:text-base text-gray-600">
                   Try adjusting your filters or search terms
                 </p>
               </div>
             ) : (
               <>
                 {/* Results Count */}
-                <div className="flex justify-between items-center mb-6">
-                  <p className="text-gray-600">
+                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 sm:mb-6 space-y-2 sm:space-y-0">
+                  <p className="text-sm sm:text-base text-gray-600">
                     Showing {products.length} of {totalProducts} products
                   </p>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setShowFilters(true)}
+                    className="lg:hidden"
+                  >
+                    <Filter className="h-4 w-4 mr-2" />
+                    Filters
+                  </Button>
                 </div>
 
                 {/* Products */}
                 <div
                   className={
                     viewMode === "grid"
-                      ? "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+                      ? "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6"
                       : "space-y-4"
                   }
                 >
@@ -331,8 +352,8 @@ export default function StoreClientPage({
 
                 {/* Pagination */}
                 {totalPages > 1 && (
-                  <div className="flex justify-center mt-8">
-                    <div className="flex space-x-2">
+                  <div className="flex justify-center mt-6 sm:mt-8">
+                    <div className="flex flex-wrap gap-1 sm:gap-2">
                       {Array.from({ length: totalPages }, (_, i) => i + 1).map(
                         (page) => (
                           <Button
@@ -348,6 +369,7 @@ export default function StoreClientPage({
                               params.set("page", page.toString());
                               router.push(`?${params.toString()}`);
                             }}
+                            className="text-xs sm:text-sm px-2 sm:px-3"
                           >
                             {page}
                           </Button>
@@ -422,7 +444,7 @@ function ProductCard({ product, store, viewMode }: ProductCardProps) {
   if (viewMode === "list") {
     return (
       <Card className="flex flex-col sm:flex-row">
-        <div className="sm:w-48 h-48 relative">
+        <div className="w-full sm:w-32 md:w-48 h-48 sm:h-auto relative">
           {primaryImage ? (
             <Image
               src={primaryImage.url}
@@ -432,19 +454,24 @@ function ProductCard({ product, store, viewMode }: ProductCardProps) {
             />
           ) : (
             <div className="w-full h-full bg-gray-200 rounded-t-lg sm:rounded-l-lg sm:rounded-t-none flex items-center justify-center">
-              <span className="text-gray-400">No image</span>
+              <span className="text-gray-400 text-sm">No image</span>
             </div>
           )}
         </div>
-        <CardContent className="flex-1 p-6">
-          <div className="flex justify-between items-start">
-            <div>
-              <h3 className="font-semibold text-lg text-gray-900 mb-2">
+        <CardContent className="flex-1 p-4 sm:p-6">
+          <div className="flex flex-col sm:flex-row justify-between items-start space-y-3 sm:space-y-0 sm:space-x-4">
+            <div className="flex-1">
+              <h3 className="font-semibold text-base sm:text-lg text-gray-900 mb-2">
                 {product.name}
               </h3>
-              <p className="text-gray-600 text-sm mb-2 line-clamp-2">
-                {product.description}
-              </p>
+              {product.description && (
+              <div className="text-gray-600 text-xs sm:text-sm mb-2 line-clamp-2 prose prose-sm max-w-none [&>*]:inline [&>*]:leading-normal">
+                <MarkdownRenderer
+                  content={product.description}
+                  maxHeight="3em"
+                />
+              </div>
+            )}
               <div className="flex flex-wrap gap-1 mb-3">
                 {product.categories.map(({ category }) => (
                   <span
@@ -456,12 +483,12 @@ function ProductCard({ product, store, viewMode }: ProductCardProps) {
                 ))}
               </div>
             </div>
-            <div className="text-right ml-4">
-              <div className="text-xl font-bold text-primary">
+            <div className="text-right space-y-2">
+              <div className="text-base sm:text-xl font-bold text-primary">
                 {formatPrice(product.basePrice)}
               </div>
               <div
-                className={`text-sm ${
+                className={`text-xs sm:text-sm ${
                   inStock ? "text-green-600" : "text-red-600"
                 }`}
               >
@@ -469,15 +496,21 @@ function ProductCard({ product, store, viewMode }: ProductCardProps) {
               </div>
             </div>
           </div>
-          <div className="flex justify-between items-center mt-4">
-            <Link href={`/product/${product.slug}`}>
-              <Button variant="outline" size="sm">
+          <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-3 mt-4">
+            <Link href={`/product/${product.slug}`} className="flex-1 sm:flex-none">
+              <Button variant="outline" size="sm" className="w-full sm:w-auto">
                 View Details
               </Button>
             </Link>
-            <Button size="sm" disabled={!inStock} onClick={handleAddToCart}>
+            <Button
+              size="sm"
+              disabled={!inStock}
+              onClick={handleAddToCart}
+              className="w-full sm:w-auto"
+            >
               <ShoppingCart className="h-4 w-4 mr-2" />
-              Add to Cart
+              <span className="hidden sm:inline">Add to Cart</span>
+              <span className="sm:hidden">Add</span>
             </Button>
           </div>
         </CardContent>
@@ -497,20 +530,20 @@ function ProductCard({ product, store, viewMode }: ProductCardProps) {
           />
         ) : (
           <div className="w-full h-full bg-gray-200 flex items-center justify-center">
-            <span className="text-gray-400">No image</span>
+            <span className="text-gray-400 text-sm">No image</span>
           </div>
         )}
         {!inStock && (
           <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-            <span className="text-white font-semibold">Out of Stock</span>
+            <span className="text-white font-semibold text-sm sm:text-base">Out of Stock</span>
           </div>
         )}
       </div>
-      <CardContent className="p-4">
-        <h3 className="font-semibold text-gray-900 mb-2 line-clamp-2">
+      <CardContent className="p-3 sm:p-4">
+        <h3 className="font-semibold text-gray-900 mb-2 line-clamp-2 text-sm sm:text-base">
           {product.name}
         </h3>
-        <div className="flex flex-wrap gap-1 mb-3">
+        <div className="flex flex-wrap gap-1 mb-2 sm:mb-3">
           {product.categories.map(({ category }) => (
             <span
               key={category.id}
@@ -520,24 +553,33 @@ function ProductCard({ product, store, viewMode }: ProductCardProps) {
             </span>
           ))}
         </div>
-        <div className="flex justify-between items-center mb-3">
-          <div className="text-lg font-bold text-primary">
+        <div className="flex justify-between items-center mb-2 sm:mb-3">
+          <div className="text-sm sm:text-lg font-bold text-primary">
             {formatPrice(product.basePrice)}
           </div>
           <div
-            className={`text-sm ${inStock ? "text-green-600" : "text-red-600"}`}
+            className={`text-xs sm:text-sm ${
+              inStock ? "text-green-600" : "text-red-600"
+            }`}
           >
             {inStock ? "In Stock" : "Out of Stock"}
           </div>
         </div>
         <div className="flex space-x-2">
           <Link href={`/product/${product.slug}`} className="flex-1">
-            <Button variant="outline" size="sm" className="w-full">
-              View Details
+            <Button variant="outline" size="sm" className="w-full text-xs sm:text-sm">
+              <span className="hidden sm:inline">View Details</span>
+              <span className="sm:hidden">Details</span>
             </Button>
           </Link>
-          <Button size="sm" disabled={!inStock} onClick={handleAddToCart}>
-            <ShoppingCart className="h-4 w-4" />
+          <Button
+            size="sm"
+            disabled={!inStock}
+            onClick={handleAddToCart}
+            className="px-2 sm:px-3"
+          >
+            <ShoppingCart className="h-3 w-3 sm:h-4 sm:w-4" />
+            <span className="hidden xs:inline sm:hidden ml-1 text-xs">+</span>
           </Button>
         </div>
       </CardContent>

@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
+import MarkdownEditor from "@/components/ui/markdown-editor";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -511,16 +511,12 @@ export default function EditProductPage() {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="description">Description *</Label>
-                <Textarea
-                  id="description"
+                <MarkdownEditor
                   value={formData.description}
-                  onChange={(e) => handleInputChange("description", e.target.value)}
-                  placeholder="Enter product description"
-                  rows={4}
-                  className={errors.description ? "border-red-500" : ""}
+                  onChange={(value) => handleInputChange("description", value)}
+                  error={errors.description}
+                  height={300}
                 />
-                {errors.description && <p className="text-sm text-red-500">{errors.description}</p>}
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">

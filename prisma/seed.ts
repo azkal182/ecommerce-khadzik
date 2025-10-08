@@ -1,12 +1,18 @@
-import { PrismaClient, Role, DiscountScope, DiscountType, ProductStatus } from '@prisma/client';
-import bcrypt from 'bcryptjs';
+import {
+  PrismaClient,
+  Role,
+  DiscountScope,
+  DiscountType,
+  ProductStatus,
+} from "@prisma/client";
+import bcrypt from "bcryptjs";
 
 const prisma = new PrismaClient();
 
 async function main() {
-  console.log('🌱 Starting seed...');
+  console.log("🌱 Memulai proses seed...");
 
-  // Clean up existing data
+  // Bersihkan data yang sudah ada
   await prisma.event.deleteMany();
   await prisma.discount.deleteMany();
   await prisma.variantOptionValue.deleteMany();
@@ -20,14 +26,14 @@ async function main() {
   await prisma.store.deleteMany();
   await prisma.user.deleteMany();
 
-  console.log('🧹 Cleaned existing data');
+  console.log("🧹 Data lama berhasil dibersihkan");
 
-  // Create Users
-  const hashedPassword = await bcrypt.hash('password123', 10);
+  // Buat Pengguna
+  const hashedPassword = await bcrypt.hash("password123", 10);
 
   const ownerUser = await prisma.user.create({
     data: {
-      email: 'owner@example.com',
+      email: "owner@example.com",
       password: hashedPassword,
       role: Role.OWNER,
     },
@@ -35,7 +41,7 @@ async function main() {
 
   const editorUser = await prisma.user.create({
     data: {
-      email: 'editor@example.com',
+      email: "editor@example.com",
       password: hashedPassword,
       role: Role.EDITOR,
     },
@@ -43,124 +49,125 @@ async function main() {
 
   const viewerUser = await prisma.user.create({
     data: {
-      email: 'viewer@example.com',
+      email: "viewer@example.com",
       password: hashedPassword,
       role: Role.VIEWER,
     },
   });
 
-  console.log('👥 Created users');
+  console.log("👥 Pengguna berhasil dibuat");
 
-  // Create Categories
+  // Buat Kategori
   const shirtsCategory = await prisma.category.create({
-    data: { name: 'Shirts', slug: 'shirts' },
+    data: { name: "Kemeja", slug: "shirts" },
   });
 
   const tshirtsCategory = await prisma.category.create({
-    data: { name: 'T-Shirts', slug: 't-shirts' },
+    data: { name: "Kaos", slug: "t-shirts" },
   });
 
   const hoodiesCategory = await prisma.category.create({
-    data: { name: 'Hoodies', slug: 'hoodies' },
+    data: { name: "Hoodie & Sweater", slug: "hoodies" },
   });
 
   const pantsCategory = await prisma.category.create({
-    data: { name: 'Pants', slug: 'pants' },
+    data: { name: "Celana", slug: "pants" },
   });
 
   const jeansCategory = await prisma.category.create({
-    data: { name: 'Jeans', slug: 'jeans' },
+    data: { name: "Jeans", slug: "jeans" },
   });
 
   const shortsCategory = await prisma.category.create({
-    data: { name: 'Shorts', slug: 'shorts' },
+    data: { name: "Celana Pendek", slug: "shorts" },
   });
 
   const jacketsCategory = await prisma.category.create({
-    data: { name: 'Jackets', slug: 'jackets' },
+    data: { name: "Jaket", slug: "jackets" },
   });
 
   const accessoriesCategory = await prisma.category.create({
-    data: { name: 'Accessories', slug: 'accessories' },
+    data: { name: "Aksesori", slug: "accessories" },
   });
 
   const shoesCategory = await prisma.category.create({
-    data: { name: 'Shoes', slug: 'shoes' },
+    data: { name: "Sepatu", slug: "shoes" },
   });
 
   const bagsCategory = await prisma.category.create({
-    data: { name: 'Bags', slug: 'bags' },
+    data: { name: "Tas", slug: "bags" },
   });
 
   const watchesCategory = await prisma.category.create({
-    data: { name: 'Watches', slug: 'watches' },
+    data: { name: "Jam Tangan", slug: "watches" },
   });
 
   const electronicsCategory = await prisma.category.create({
-    data: { name: 'Electronics', slug: 'electronics' },
+    data: { name: "Elektronik", slug: "electronics" },
   });
 
   const analogCategory = await prisma.category.create({
-    data: { name: 'Analog', slug: 'analog' },
+    data: { name: "Analog", slug: "analog" },
   });
 
   const digitalCategory = await prisma.category.create({
-    data: { name: 'Digital', slug: 'digital' },
+    data: { name: "Digital", slug: "digital" },
   });
 
   const smartCategory = await prisma.category.create({
-    data: { name: 'Smart', slug: 'smart' },
+    data: { name: "Pintar", slug: "smart" },
   });
 
   const sportsCategory = await prisma.category.create({
-    data: { name: 'Sports', slug: 'sports' },
+    data: { name: "Olahraga", slug: "sports" },
   });
 
   const formalCategory = await prisma.category.create({
-    data: { name: 'Formal', slug: 'formal' },
+    data: { name: "Formal", slug: "formal" },
   });
 
-  console.log('📁 Created categories');
+  console.log("📁 Kategori berhasil dibuat");
 
-  // Create Stores
+  // Buat Toko
   const clothingStore = await prisma.store.create({
     data: {
-      slug: 'fashion-store',
-      name: 'Fashion Store',
-      description: 'Discover our curated collection of modern fashion. From casual wear to formal attire, find the perfect pieces to elevate your style.',
+      slug: "fashion-store",
+      name: "Toko Fashion",
+      description:
+        "Jelajahi koleksi fashion modern kurasi kami. Dari kasual hingga formal, temukan pilihan terbaik untuk menyempurnakan gaya Anda.",
       theme: {
-        primary: '#3b82f6',
-        secondary: '#1d4ed8',
-        bg: '#ffffff',
-        fg: '#111827',
-        accent: '#f59e0b',
+        primary: "#3b82f6",
+        secondary: "#1d4ed8",
+        bg: "#ffffff",
+        fg: "#111827",
+        accent: "#f59e0b",
       },
-      waNumber: '628123456789',
+      waNumber: "628123456789",
       isActive: true,
     },
   });
 
   const techStore = await prisma.store.create({
     data: {
-      slug: 'tech-hub',
-      name: 'Tech Hub',
-      description: 'Your one-stop destination for the latest gadgets and electronics. From smartphones to smartwatches, we have everything you need to stay connected and productive.',
+      slug: "tech-hub",
+      name: "Pusat Teknologi",
+      description:
+        "Tujuan satu tempat untuk gawai dan elektronik terbaru. Dari smartphone hingga smartwatch, semua yang Anda butuhkan untuk tetap terhubung dan produktif ada di sini.",
       theme: {
-        primary: '#00b4d8',
-        secondary: '#0077b6',
-        bg: '#f0f9ff',
-        fg: '#0c4a6e',
-        accent: '#00d9ff',
+        primary: "#00b4d8",
+        secondary: "#0077b6",
+        bg: "#f0f9ff",
+        fg: "#0c4a6e",
+        accent: "#00d9ff",
       },
-      waNumber: '628555123456',
+      waNumber: "628555123456",
       isActive: true,
     },
   });
 
-  
-  console.log('🏪 Created stores');
+  console.log("🏪 Toko berhasil dibuat");
 
-  // Assign Store Roles
+  // Beri Peran Toko
   await prisma.storeRole.create({
     data: {
       storeId: clothingStore.id,
@@ -169,280 +176,287 @@ async function main() {
     },
   });
 
-  console.log('🔐 Assigned store roles');
+  console.log("🔐 Peran pengguna pada toko berhasil ditetapkan");
 
-  // Create Products for Fashion Store
+  // Produk untuk Toko Fashion
   const fashionProducts = [
     {
-      name: 'Premium Cotton T-Shirt',
-      slug: 'premium-cotton-tshirt',
-      description: 'High-quality cotton t-shirt with comfortable fit and modern design',
+      name: "Kaos Katun Premium",
+      slug: "premium-cotton-tshirt",
+      description:
+        "Kaos katun berkualitas tinggi dengan potongan nyaman dan desain modern",
       basePrice: 125000,
       categories: [tshirtsCategory.id],
     },
     {
-      name: 'Classic Button-Up Shirt',
-      slug: 'classic-button-up-shirt',
-      description: 'Professional button-up shirt perfect for office and formal occasions',
+      name: "Kemeja Kancing Klasik",
+      slug: "classic-button-up-shirt",
+      description:
+        "Kemeja profesional yang cocok untuk kantor dan acara formal",
       basePrice: 275000,
       categories: [shirtsCategory.id, formalCategory.id],
     },
     {
-      name: 'Graphic Hoodie',
-      slug: 'graphic-hoodie',
-      description: 'Cozy hoodie with stylish graphic print, perfect for casual wear',
+      name: "Hoodie Grafis",
+      slug: "graphic-hoodie",
+      description:
+        "Hoodie hangat dengan cetak grafis stylish, cocok untuk gaya kasual",
       basePrice: 325000,
       categories: [hoodiesCategory.id],
     },
     {
-      name: 'Slim Fit Jeans',
-      slug: 'slim-fit-jeans',
-      description: 'Modern slim fit jeans that flatter your silhouette',
+      name: "Jeans Slim Fit",
+      slug: "slim-fit-jeans",
+      description: "Jeans slim fit modern yang menyanjung siluet Anda",
       basePrice: 450000,
       categories: [jeansCategory.id, pantsCategory.id],
     },
     {
-      name: 'Athletic Shorts',
-      slug: 'athletic-shorts',
-      description: 'Performance shorts designed for maximum comfort and mobility',
+      name: "Celana Pendek Atletik",
+      slug: "athletic-shorts",
+      description:
+        "Celana pendek performa untuk kenyamanan dan mobilitas maksimal",
       basePrice: 175000,
       categories: [shortsCategory.id, sportsCategory.id],
     },
     {
-      name: 'Denim Jacket',
-      slug: 'denim-jacket',
-      description: 'Classic denim jacket with modern styling and durability',
+      name: "Jaket Denim",
+      slug: "denim-jacket",
+      description:
+        "Jaket denim klasik dengan gaya modern dan daya tahan tinggi",
       basePrice: 525000,
       categories: [jacketsCategory.id],
     },
     {
-      name: 'Canvas Backpack',
-      slug: 'canvas-backpack',
-      description: 'Durable canvas backpack with multiple compartments for daily use',
+      name: "Ransel Kanvas",
+      slug: "canvas-backpack",
+      description:
+        "Ransel kanvas tahan lama dengan banyak kompartemen untuk penggunaan harian",
       basePrice: 225000,
       categories: [bagsCategory.id, accessoriesCategory.id],
     },
     {
-      name: 'Running Shoes',
-      slug: 'running-shoes',
-      description: 'Professional running shoes with advanced cushioning technology',
+      name: "Sepatu Lari",
+      slug: "running-shoes",
+      description: "Sepatu lari profesional dengan teknologi bantalan canggih",
       basePrice: 675000,
       categories: [shoesCategory.id, sportsCategory.id],
     },
     {
-      name: 'Polo Shirt Classic',
-      slug: 'polo-shirt-classic',
-      description: 'Classic polo shirt with embroidered logo, perfect for semi-formal occasions',
+      name: "Polo Klasik",
+      slug: "polo-shirt-classic",
+      description:
+        "Kaos polo klasik dengan logo bordir, cocok untuk semi-formal",
       basePrice: 195000,
       categories: [shirtsCategory.id],
     },
     {
-      name: 'V-Neck Sweater',
-      slug: 'vneck-sweater',
-      description: 'Comfortable v-neck sweater made from premium wool blend',
+      name: "Sweter V-Neck",
+      slug: "vneck-sweater",
+      description: "Sweter v-neck nyaman dari campuran wol premium",
       basePrice: 375000,
       categories: [hoodiesCategory.id],
     },
     {
-      name: 'Chino Pants',
-      slug: 'chino-pants',
-      description: 'Versatile chino pants perfect for office and casual wear',
+      name: "Celana Chino",
+      slug: "chino-pants",
+      description: "Celana chino serbaguna untuk kantor maupun kasual",
       basePrice: 425000,
       categories: [pantsCategory.id],
     },
     {
-      name: 'Cargo Shorts',
-      slug: 'cargo-shorts',
-      description: 'Functional cargo shorts with multiple pockets',
+      name: "Celana Pendek Kargo",
+      slug: "cargo-shorts",
+      description: "Celana pendek kargo fungsional dengan banyak kantong",
       basePrice: 225000,
       categories: [shortsCategory.id],
     },
     {
-      name: 'Leather Jacket',
-      slug: 'leather-jacket',
-      description: 'Premium leather jacket with classic styling',
+      name: "Jaket Kulit",
+      slug: "leather-jacket",
+      description: "Jaket kulit premium dengan gaya klasik",
       basePrice: 1250000,
       categories: [jacketsCategory.id],
     },
     {
-      name: 'Crossbody Bag',
-      slug: 'crossbody-bag',
-      description: 'Stylish crossbody bag with adjustable strap',
+      name: "Tas Selempang",
+      slug: "crossbody-bag",
+      description: "Tas selempang stylish dengan tali yang dapat disesuaikan",
       basePrice: 325000,
       categories: [bagsCategory.id, accessoriesCategory.id],
     },
     {
-      name: 'Sneakers Sport',
-      slug: 'sneakers-sport',
-      description: 'Comfortable sport sneakers with modern design',
+      name: "Sneakers Olahraga",
+      slug: "sneakers-sport",
+      description: "Sneakers olahraga nyaman dengan desain modern",
       basePrice: 550000,
       categories: [shoesCategory.id],
     },
     {
-      name: 'Long Sleeve Tee',
-      slug: 'long-sleeve-tee',
-      description: 'Comfortable long sleeve t-shirt for casual wear',
+      name: "Kaos Lengan Panjang",
+      slug: "long-sleeve-tee",
+      description: "Kaos lengan panjang nyaman untuk gaya kasual",
       basePrice: 145000,
       categories: [tshirtsCategory.id],
     },
     {
-      name: 'Oxford Shirt',
-      slug: 'oxford-shirt',
-      description: 'Premium oxford shirt for professional settings',
+      name: "Kemeja Oxford",
+      slug: "oxford-shirt",
+      description: "Kemeja oxford premium untuk suasana profesional",
       basePrice: 325000,
       categories: [shirtsCategory.id, formalCategory.id],
     },
     {
-      name: 'Zip-up Hoodie',
-      slug: 'zip-up-hoodie',
-      description: 'Comfortable zip-up hoodie with front pockets',
+      name: "Hoodie Resleting",
+      slug: "zip-up-hoodie",
+      description: "Hoodie dengan resleting dan kantong depan yang nyaman",
       basePrice: 355000,
       categories: [hoodiesCategory.id],
     },
     {
-      name: 'Skinny Jeans',
-      slug: 'skinny-jeans',
-      description: 'Trendy skinny jeans with stretch comfort',
+      name: "Jeans Skinny",
+      slug: "skinny-jeans",
+      description: "Jeans skinny trendi dengan kenyamanan stretch",
       basePrice: 475000,
       categories: [jeansCategory.id, pantsCategory.id],
     },
     {
-      name: 'Board Shorts',
-      slug: 'board-shorts',
-      description: 'Quick-dry board shorts for beach activities',
+      name: "Boardshort",
+      slug: "board-shorts",
+      description: "Celana pendek cepat kering untuk aktivitas pantai",
       basePrice: 195000,
       categories: [shortsCategory.id, sportsCategory.id],
     },
     {
-      name: 'Bomber Jacket',
-      slug: 'bomber-jacket',
-      description: 'Modern bomber jacket with ribbed cuffs',
+      name: "Jaket Bomber",
+      slug: "bomber-jacket",
+      description: "Jaket bomber modern dengan manset rib",
       basePrice: 595000,
       categories: [jacketsCategory.id],
     },
     {
-      name: 'Tote Bag Large',
-      slug: 'tote-bag-large',
-      description: 'Spacious tote bag perfect for work and shopping',
+      name: "Tas Tote Besar",
+      slug: "tote-bag-large",
+      description: "Tas tote luas, ideal untuk kerja dan belanja",
       basePrice: 275000,
       categories: [bagsCategory.id, accessoriesCategory.id],
     },
     {
-      name: 'Loafers Classic',
-      slug: 'loafers-classic',
-      description: 'Classic leather loafers for formal occasions',
+      name: "Loafers Klasik",
+      slug: "loafers-classic",
+      description: "Loafers kulit klasik untuk acara formal",
       basePrice: 725000,
       categories: [shoesCategory.id, formalCategory.id],
     },
     {
-      name: 'Henley Shirt',
-      slug: 'henley-shirt',
-      description: 'Stylish henley shirt with button placket',
+      name: "Kaus Henley",
+      slug: "henley-shirt",
+      description: "Kaus henley stylish dengan bukaan kancing",
       basePrice: 165000,
       categories: [tshirtsCategory.id, shirtsCategory.id],
     },
     {
-      name: 'Flannel Shirt',
-      slug: 'flannel-shirt',
-      description: 'Warm flannel shirt perfect for cold weather',
+      name: "Kemeja Flanel",
+      slug: "flannel-shirt",
+      description: "Kemeja flanel hangat untuk cuaca dingin",
       basePrice: 285000,
       categories: [shirtsCategory.id],
     },
     {
-      name: 'Pullover Sweater',
-      slug: 'pullover-sweater',
-      description: 'Cozy pullover sweater for winter wear',
+      name: "Sweter Pullover",
+      slug: "pullover-sweater",
+      description: "Sweter pullover hangat untuk musim dingin",
       basePrice: 395000,
       categories: [hoodiesCategory.id],
     },
     {
-      name: 'Relaxed Fit Jeans',
-      slug: 'relaxed-fit-jeans',
-      description: 'Comfortable relaxed fit jeans for all-day wear',
+      name: "Jeans Relaxed Fit",
+      slug: "relaxed-fit-jeans",
+      description: "Jeans relaxed fit nyaman untuk seharian",
       basePrice: 425000,
       categories: [jeansCategory.id, pantsCategory.id],
     },
     {
-      name: 'Bermuda Shorts',
-      slug: 'bermuda-shorts',
-      description: 'Classic bermuda shorts for summer casual',
+      name: "Celana Pendek Bermuda",
+      slug: "bermuda-shorts",
+      description: "Celana pendek bermuda klasik untuk musim panas",
       basePrice: 185000,
       categories: [shortsCategory.id],
     },
     {
-      name: 'Windbreaker Jacket',
-      slug: 'windbreaker-jacket',
-      description: 'Lightweight windbreaker perfect for outdoor activities',
+      name: "Jaket Windbreaker",
+      slug: "windbreaker-jacket",
+      description: "Windbreaker ringan untuk aktivitas luar ruang",
       basePrice: 425000,
       categories: [jacketsCategory.id, sportsCategory.id],
     },
     {
-      name: 'Clutch Bag Evening',
-      slug: 'clutch-bag-evening',
-      description: 'Elegant clutch bag for special occasions',
+      name: "Clutch Malam",
+      slug: "clutch-bag-evening",
+      description: "Tas clutch elegan untuk acara spesial",
       basePrice: 425000,
       categories: [bagsCategory.id, accessoriesCategory.id],
     },
     {
-      name: 'Boots Ankle',
-      slug: 'boots-ankle',
-      description: 'Stylish ankle boots for all seasons',
+      name: "Boots Pendek",
+      slug: "boots-ankle",
+      description: "Boots pergelangan kaki stylish untuk segala musim",
       basePrice: 825000,
       categories: [shoesCategory.id],
     },
     {
-      name: 'Tank Top Basic',
-      slug: 'tank-top-basic',
-      description: 'Basic tank top perfect for layering',
+      name: "Tank Top Basic",
+      slug: "tank-top-basic",
+      description: "Tank top basic ideal untuk layering",
       basePrice: 95000,
       categories: [tshirtsCategory.id],
     },
     {
-      name: 'Dress Shirt White',
-      slug: 'dress-shirt-white',
-      description: 'Classic white dress shirt for formal wear',
+      name: "Kemeja Putih Formal",
+      slug: "dress-shirt-white",
+      description: "Kemeja putih klasik untuk busana formal",
       basePrice: 355000,
       categories: [shirtsCategory.id, formalCategory.id],
     },
     {
-      name: 'Sweatshirt Crewneck',
-      slug: 'sweatshirt-crewneck',
-      description: 'Classic crewneck sweatshirt for casual comfort',
+      name: "Sweatshirt Crewneck",
+      slug: "sweatshirt-crewneck",
+      description: "Sweatshirt crewneck klasik untuk kenyamanan kasual",
       basePrice: 295000,
       categories: [hoodiesCategory.id],
     },
     {
-      name: 'Bootcut Jeans',
-      slug: 'bootcut-jeans',
-      description: 'Classic bootcut jeans with slight flare',
+      name: "Jeans Bootcut",
+      slug: "bootcut-jeans",
+      description: "Jeans bootcut klasik dengan sedikit flare",
       basePrice: 455000,
       categories: [jeansCategory.id, pantsCategory.id],
     },
     {
-      name: 'Denim Shorts',
-      slug: 'denim-shorts',
-      description: 'Classic denim shorts for summer style',
+      name: "Celana Pendek Denim",
+      slug: "denim-shorts",
+      description: "Celana pendek denim klasik untuk gaya musim panas",
       basePrice: 205000,
       categories: [shortsCategory.id, jeansCategory.id],
     },
     {
-      name: 'Leather Biker Jacket',
-      slug: 'leather-biker-jacket',
-      description: 'Edgy leather biker jacket with metal hardware',
+      name: "Jaket Kulit Biker",
+      slug: "leather-biker-jacket",
+      description: "Jaket kulit biker dengan aksen hardware metal",
       basePrice: 1450000,
       categories: [jacketsCategory.id],
     },
     {
-      name: 'Waist Bag Sport',
-      slug: 'waist-bag-sport',
-      description: 'Sporty waist bag for hands-free convenience',
+      name: "Tas Pinggang Sport",
+      slug: "waist-bag-sport",
+      description: "Tas pinggang sporty untuk kepraktisan tanpa tangan",
       basePrice: 185000,
       categories: [bagsCategory.id, accessoriesCategory.id],
     },
     {
-      name: 'High Top Sneakers',
-      slug: 'high-top-sneakers',
-      description: 'Classic high-top sneakers with retro style',
+      name: "Sneakers High Top",
+      slug: "high-top-sneakers",
+      description: "Sneakers high-top klasik bergaya retro",
       basePrice: 625000,
       categories: [shoesCategory.id],
     },
@@ -459,9 +473,9 @@ async function main() {
       },
     });
 
-    // Connect categories
+    // Hubungkan kategori
     await prisma.productCategory.createMany({
-      data: categories.map(categoryId => ({
+      data: categories.map((categoryId) => ({
         productId: createdProduct.id,
         categoryId,
       })),
@@ -470,264 +484,290 @@ async function main() {
     createdFashionProducts.push(createdProduct);
   }
 
-  // Create Products for Tech Store
+  // Produk untuk Pusat Teknologi
   const techProducts = [
     {
-      name: 'Smartphone Pro Max',
-      slug: 'smartphone-pro-max',
-      description: 'Flagship smartphone with advanced features and premium build quality',
+      name: "Smartphone Pro Max",
+      slug: "smartphone-pro-max",
+      description:
+        "Smartphone flagship dengan fitur canggih dan kualitas build premium",
       basePrice: 15999000,
       categories: [electronicsCategory.id, smartCategory.id],
     },
     {
-      name: 'Wireless Earbuds Pro',
-      slug: 'wireless-earbuds-pro',
-      description: 'Premium wireless earbuds with active noise cancellation',
+      name: "Earbuds Nirkabel Pro",
+      slug: "wireless-earbuds-pro",
+      description: "Earbuds nirkabel premium dengan peredam bising aktif",
       basePrice: 3299000,
       categories: [electronicsCategory.id],
     },
     {
-      name: 'Smart Watch Ultra',
-      slug: 'smart-watch-ultra',
-      description: 'Advanced smartwatch with health monitoring and fitness tracking',
+      name: "Jam Tangan Pintar Ultra",
+      slug: "smart-watch-ultra",
+      description:
+        "Smartwatch canggih dengan pemantauan kesehatan dan pelacak kebugaran",
       basePrice: 7499000,
-      categories: [electronicsCategory.id, smartCategory.id, watchesCategory.id],
+      categories: [
+        electronicsCategory.id,
+        smartCategory.id,
+        watchesCategory.id,
+      ],
     },
     {
       name: 'Laptop Pro 16"',
-      slug: 'laptop-pro-16',
-      description: 'High-performance laptop with stunning retina display and powerful processor',
+      slug: "laptop-pro-16",
+      description:
+        "Laptop bertenaga tinggi dengan layar retina memukau dan prosesor tangguh",
       basePrice: 28999000,
       categories: [electronicsCategory.id],
     },
     {
       name: 'Tablet Pro 12"',
-      slug: 'tablet-pro-12',
-      description: 'Professional tablet with Apple Pencil support and stunning display',
+      slug: "tablet-pro-12",
+      description:
+        "Tablet profesional dengan dukungan stylus dan layar menawan",
       basePrice: 10999000,
       categories: [electronicsCategory.id],
     },
     {
-      name: 'Gaming Console Pro',
-      slug: 'gaming-console-pro',
-      description: 'Next-generation gaming console with 4K graphics and ray tracing',
+      name: "Konsol Gim Pro",
+      slug: "gaming-console-pro",
+      description:
+        "Konsol gim generasi terbaru dengan grafis 4K dan ray tracing",
       basePrice: 8999000,
       categories: [electronicsCategory.id, smartCategory.id],
     },
     {
-      name: 'Drone Camera 4K',
-      slug: 'drone-camera-4k',
-      description: 'Professional drone with 4K camera and GPS stabilization',
+      name: "Drone Kamera 4K",
+      slug: "drone-camera-4k",
+      description: "Drone profesional dengan kamera 4K dan stabilisasi GPS",
       basePrice: 12499000,
       categories: [electronicsCategory.id],
     },
     {
-      name: 'Action Camera Hero',
-      slug: 'action-camera-hero',
-      description: 'Waterproof action camera with 4K recording and image stabilization',
+      name: "Kamera Aksi Hero",
+      slug: "action-camera-hero",
+      description:
+        "Kamera aksi tahan air dengan perekaman 4K dan stabilisasi gambar",
       basePrice: 4299000,
       categories: [electronicsCategory.id, sportsCategory.id],
     },
     {
-      name: 'Smart Speaker Hub',
-      slug: 'smart-speaker-hub',
-      description: 'Voice-controlled smart speaker with home automation features',
+      name: "Speaker Pintar Hub",
+      slug: "smart-speaker-hub",
+      description:
+        "Speaker pintar dengan kontrol suara dan fitur otomasi rumah",
       basePrice: 2299000,
       categories: [electronicsCategory.id, smartCategory.id],
     },
     {
-      name: 'Wireless Charger Premium',
-      slug: 'wireless-charger-premium',
-      description: 'Fast wireless charger with multiple device support',
+      name: "Pengisi Daya Nirkabel Premium",
+      slug: "wireless-charger-premium",
+      description:
+        "Pengisi daya nirkabel cepat dengan dukungan banyak perangkat",
       basePrice: 899000,
       categories: [electronicsCategory.id],
     },
     {
-      name: 'Fitness Tracker Band',
-      slug: 'fitness-tracker-band',
-      description: 'Advanced fitness tracker with heart rate monitoring',
+      name: "Gelang Pelacak Kebugaran",
+      slug: "fitness-tracker-band",
+      description: "Pelacak kebugaran canggih dengan pemantauan detak jantung",
       basePrice: 1999000,
       categories: [electronicsCategory.id, smartCategory.id, sportsCategory.id],
     },
     {
-      name: 'Gaming Headset RGB',
-      slug: 'gaming-headset-rgb',
-      description: 'Professional gaming headset with 7.1 surround sound',
+      name: "Headset Gaming RGB",
+      slug: "gaming-headset-rgb",
+      description: "Headset gaming profesional dengan surround 7.1",
       basePrice: 1899000,
       categories: [electronicsCategory.id],
     },
     {
       name: 'Smart TV 55" OLED',
-      slug: 'smart-tv-55-oled',
-      description: 'Premium OLED smart TV with 4K resolution and HDR',
+      slug: "smart-tv-55-oled",
+      description: "Smart TV OLED premium dengan resolusi 4K dan HDR",
       basePrice: 18999000,
       categories: [electronicsCategory.id],
     },
     {
-      name: 'Bluetooth Speaker Portable',
-      slug: 'bluetooth-speaker-portable',
-      description: 'Waterproof portable speaker with 360-degree sound',
+      name: "Speaker Bluetooth Portabel",
+      slug: "bluetooth-speaker-portable",
+      description: "Speaker portabel tahan air dengan suara 360 derajat",
       basePrice: 1599000,
       categories: [electronicsCategory.id],
     },
     {
-      name: 'VR Headset Pro',
-      slug: 'vr-headset-pro',
-      description: 'Virtual reality headset with hand tracking and haptic feedback',
+      name: "Headset VR Pro",
+      slug: "vr-headset-pro",
+      description:
+        "Headset realitas virtual dengan hand-tracking dan umpan balik haptik",
       basePrice: 9999000,
       categories: [electronicsCategory.id, smartCategory.id],
     },
     {
-      name: 'Power Bank 20000mAh',
-      slug: 'power-bank-20000mah',
-      description: 'High-capacity power bank with fast charging support',
+      name: "Power Bank 20000mAh",
+      slug: "power-bank-20000mah",
+      description:
+        "Power bank berkapasitas besar dengan dukungan pengisian cepat",
       basePrice: 699000,
       categories: [electronicsCategory.id],
     },
     {
-      name: 'Smart Home Hub',
-      slug: 'smart-home-hub',
-      description: 'Central hub for smart home devices and automation',
+      name: "Hub Rumah Pintar",
+      slug: "smart-home-hub",
+      description: "Pusat kendali untuk perangkat rumah pintar dan otomasi",
       basePrice: 2799000,
       categories: [electronicsCategory.id, smartCategory.id],
     },
     {
-      name: 'Digital Camera Mirrorless',
-      slug: 'digital-camera-mirrorless',
-      description: 'Professional mirrorless camera with 4K video recording',
+      name: "Kamera Mirrorless Digital",
+      slug: "digital-camera-mirrorless",
+      description: "Kamera mirrorless profesional dengan perekaman video 4K",
       basePrice: 22999000,
       categories: [electronicsCategory.id],
     },
     {
-      name: 'Gaming Keyboard Mechanical',
-      slug: 'gaming-keyboard-mechanical',
-      description: 'RGB mechanical gaming keyboard with programmable keys',
+      name: "Keyboard Gaming Mekanis",
+      slug: "gaming-keyboard-mechanical",
+      description:
+        "Keyboard gaming mekanis RGB dengan tombol yang dapat diprogram",
       basePrice: 1799000,
       categories: [electronicsCategory.id],
     },
     {
-      name: 'Gaming Mouse Wireless',
-      slug: 'gaming-mouse-wireless',
-      description: 'High-precision wireless gaming mouse with customizable DPI',
+      name: "Mouse Gaming Nirkabel",
+      slug: "gaming-mouse-wireless",
+      description:
+        "Mouse gaming nirkabel presisi tinggi dengan DPI yang dapat disetel",
       basePrice: 1499000,
       categories: [electronicsCategory.id],
     },
     {
       name: 'Monitor Gaming 27"',
-      slug: 'monitor-gaming-27',
-      description: '27-inch gaming monitor with 144Hz refresh rate and 1ms response',
+      slug: "monitor-gaming-27",
+      description: "Monitor gaming 27 inci 144Hz dengan respons 1ms",
       basePrice: 6999000,
       categories: [electronicsCategory.id],
     },
     {
-      name: 'Smart Door Lock',
-      slug: 'smart-door-lock',
-      description: 'Keyless smart door lock with app control and biometric access',
+      name: "Kunci Pintu Pintar",
+      slug: "smart-door-lock",
+      description:
+        "Kunci pintu pintar tanpa kunci fisik dengan aplikasi & biometrik",
       basePrice: 3299000,
       categories: [electronicsCategory.id, smartCategory.id],
     },
     {
-      name: 'Security Camera WiFi',
-      slug: 'security-camera-wifi',
-      description: 'WiFi security camera with night vision and motion detection',
+      name: "Kamera Keamanan WiFi",
+      slug: "security-camera-wifi",
+      description: "Kamera keamanan WiFi dengan night vision dan deteksi gerak",
       basePrice: 1299000,
       categories: [electronicsCategory.id],
     },
     {
-      name: 'Smart Light Bulbs Set',
-      slug: 'smart-light-bulbs-set',
-      description: 'RGB smart light bulbs with app control and scheduling',
+      name: "Set Bohlam Pintar",
+      slug: "smart-light-bulbs-set",
+      description: "Bohlam pintar RGB dengan kontrol aplikasi dan penjadwalan",
       basePrice: 899000,
       categories: [electronicsCategory.id, smartCategory.id],
     },
     {
-      name: 'Smart Thermostat',
-      slug: 'smart-thermostat',
-      description: 'Energy-saving smart thermostat with learning algorithms',
+      name: "Termostat Pintar",
+      slug: "smart-thermostat",
+      description: "Termostat hemat energi dengan algoritme pembelajaran",
       basePrice: 2499000,
       categories: [electronicsCategory.id, smartCategory.id],
     },
     {
-      name: 'Wireless Router Mesh',
-      slug: 'wireless-router-mesh',
-      description: 'Mesh WiFi router system for whole home coverage',
+      name: "Router Mesh Nirkabel",
+      slug: "wireless-router-mesh",
+      description: "Sistem router WiFi mesh untuk cakupan seluruh rumah",
       basePrice: 3499000,
       categories: [electronicsCategory.id],
     },
     {
-      name: 'Smart Watch Sport',
-      slug: 'smart-watch-sport',
-      description: 'GPS-enabled smartwatch for fitness and outdoor activities',
+      name: "Jam Tangan Pintar Sport",
+      slug: "smart-watch-sport",
+      description: "Smartwatch ber-GPS untuk kebugaran dan aktivitas outdoor",
       basePrice: 4499000,
-      categories: [electronicsCategory.id, smartCategory.id, watchesCategory.id, sportsCategory.id],
+      categories: [
+        electronicsCategory.id,
+        smartCategory.id,
+        watchesCategory.id,
+        sportsCategory.id,
+      ],
     },
     {
-      name: 'Tablet Keyboard Case',
-      slug: 'tablet-keyboard-case',
-      description: 'Protective case with built-in keyboard for tablets',
+      name: "Casing Keyboard Tablet",
+      slug: "tablet-keyboard-case",
+      description: "Casing pelindung dengan keyboard bawaan untuk tablet",
       basePrice: 1299000,
       categories: [electronicsCategory.id],
     },
     {
-      name: 'Webcam HD Pro',
-      slug: 'webcam-hd-pro',
-      description: '1080p HD webcam with auto-focus and noise reduction',
+      name: "Webcam HD Pro",
+      slug: "webcam-hd-pro",
+      description: "Webcam 1080p dengan auto-focus dan peredam noise",
       basePrice: 899000,
       categories: [electronicsCategory.id],
     },
     {
-      name: 'USB-C Hub Multiport',
-      slug: 'usb-c-hub-multiport',
-      description: 'Multi-port USB-C hub with HDMI, USB 3.0, and SD card reader',
+      name: "Hub USB-C Multiport",
+      slug: "usb-c-hub-multiport",
+      description:
+        "Hub USB-C multiport dengan HDMI, USB 3.0, dan pembaca kartu SD",
       basePrice: 699000,
       categories: [electronicsCategory.id],
     },
     {
-      name: 'Smart Scale Digital',
-      slug: 'smart-scale-digital',
-      description: 'Digital scale with body composition analysis and app sync',
+      name: "Timbangan Pintar Digital",
+      slug: "smart-scale-digital",
+      description:
+        "Timbangan digital dengan analisis komposisi tubuh & sinkronisasi aplikasi",
       basePrice: 999000,
       categories: [electronicsCategory.id, smartCategory.id],
     },
     {
-      name: 'Phone Camera Lens Kit',
-      slug: 'phone-camera-lens-kit',
-      description: 'Professional lens kit for smartphone photography',
+      name: "Lensa Kamera Ponsel",
+      slug: "phone-camera-lens-kit",
+      description: "Paket lensa profesional untuk fotografi smartphone",
       basePrice: 799000,
       categories: [electronicsCategory.id],
     },
     {
-      name: 'Smart Water Bottle',
-      slug: 'smart-water-bottle',
-      description: 'Hydration tracking water bottle with temperature control',
+      name: "Botol Air Pintar",
+      slug: "smart-water-bottle",
+      description: "Botol air dengan pelacak hidrasi dan pengatur suhu",
       basePrice: 1299000,
       categories: [electronicsCategory.id, smartCategory.id],
     },
     {
-      name: 'Laptop Stand Adjustable',
-      slug: 'laptop-stand-adjustable',
-      description: 'Ergonomic laptop stand with adjustable height and angle',
+      name: "Stand Laptop Adjustable",
+      slug: "laptop-stand-adjustable",
+      description:
+        "Stand laptop ergonomis dengan tinggi & sudut yang dapat diatur",
       basePrice: 499000,
       categories: [electronicsCategory.id],
     },
     {
-      name: 'Smart Alarm Clock',
-      slug: 'smart-alarm-clock',
-      description: 'WiFi-enabled alarm clock with sleep tracking and sunrise simulation',
+      name: "Jam Alarm Pintar",
+      slug: "smart-alarm-clock",
+      description:
+        "Jam alarm WiFi dengan pelacak tidur dan simulasi matahari terbit",
       basePrice: 899000,
       categories: [electronicsCategory.id, smartCategory.id],
     },
     {
-      name: 'External SSD 1TB',
-      slug: 'external-ssd-1tb',
-      description: 'Portable external SSD with fast transfer speeds',
+      name: "SSD Eksternal 1TB",
+      slug: "external-ssd-1tb",
+      description: "SSD eksternal portabel dengan kecepatan transfer tinggi",
       basePrice: 1999000,
       categories: [electronicsCategory.id],
     },
     {
-      name: 'Smart Plug Outlet',
-      slug: 'smart-plug-outlet',
-      description: 'WiFi-enabled smart plug with energy monitoring',
+      name: "Stopkontak Pintar",
+      slug: "smart-plug-outlet",
+      description: "Stopkontak pintar ber-WiFi dengan pemantauan energi",
       basePrice: 399000,
       categories: [electronicsCategory.id, smartCategory.id],
     },
@@ -744,9 +784,9 @@ async function main() {
       },
     });
 
-    // Connect categories
+    // Hubungkan kategori
     await prisma.productCategory.createMany({
-      data: categories.map(categoryId => ({
+      data: categories.map((categoryId) => ({
         productId: createdProduct.id,
         categoryId,
       })),
@@ -755,68 +795,67 @@ async function main() {
     createdTechProducts.push(createdProduct);
   }
 
-  
-  console.log('📦 Created products');
+  console.log("📦 Produk berhasil dibuat");
 
-  // Add product images
+  // Tambahkan gambar produk
   for (const product of [...createdFashionProducts, ...createdTechProducts]) {
     await prisma.productImage.createMany({
       data: [
         {
           productId: product.id,
           url: `https://picsum.photos/400/300?random=${product.id}&1`,
-          alt: `${product.name} - Image 1`,
+          alt: `${product.name} - Gambar 1`,
           order: 0,
         },
         {
           productId: product.id,
           url: `https://picsum.photos/400/300?random=${product.id}&2`,
-          alt: `${product.name} - Image 2`,
+          alt: `${product.name} - Gambar 2`,
           order: 1,
         },
       ],
     });
   }
 
-  console.log('🖼️ Added product images');
+  console.log("🖼️ Gambar produk ditambahkan");
 
-  // Create variant options for clothing products
+  // Buat opsi varian untuk produk fashion
   for (const product of createdFashionProducts) {
-    // Create Color option type
+    // Tipe opsi Warna
     const colorOptionType = await prisma.variantOptionType.create({
       data: {
         productId: product.id,
-        name: 'Color',
+        name: "Warna",
       },
     });
 
-    // Create Size option type
+    // Tipe opsi Ukuran
     const sizeOptionType = await prisma.variantOptionType.create({
       data: {
         productId: product.id,
-        name: 'Size',
+        name: "Ukuran",
       },
     });
 
-    // Create color values
-    const colorValues = await prisma.variantOptionValue.createMany({
+    // Nilai warna
+    await prisma.variantOptionValue.createMany({
       data: [
-        { typeId: colorOptionType.id, name: 'Blue' },
-        { typeId: colorOptionType.id, name: 'Black' },
-        { typeId: colorOptionType.id, name: 'White' },
+        { typeId: colorOptionType.id, name: "Biru" },
+        { typeId: colorOptionType.id, name: "Hitam" },
+        { typeId: colorOptionType.id, name: "Putih" },
       ],
     });
 
-    // Create size values
-    const sizeValues = await prisma.variantOptionValue.createMany({
+    // Nilai ukuran
+    await prisma.variantOptionValue.createMany({
       data: [
-        { typeId: sizeOptionType.id, name: 'M' },
-        { typeId: sizeOptionType.id, name: 'L' },
-        { typeId: sizeOptionType.id, name: 'XL' },
+        { typeId: sizeOptionType.id, name: "M" },
+        { typeId: sizeOptionType.id, name: "L" },
+        { typeId: sizeOptionType.id, name: "XL" },
       ],
     });
 
-    // Get the created values for variant creation
+    // Ambil nilai yang dibuat untuk pembuatan varian
     const createdColorValues = await prisma.variantOptionValue.findMany({
       where: { typeId: colorOptionType.id },
     });
@@ -824,8 +863,8 @@ async function main() {
       where: { typeId: sizeOptionType.id },
     });
 
-    // Create variants (combinations of color and size)
-    const variantCombinations = [];
+    // Buat varian (kombinasi warna & ukuran)
+    const variantCombinations: Array<[string, string]> = [];
     for (const color of createdColorValues) {
       for (const size of createdSizeValues) {
         variantCombinations.push([color.id, size.id]);
@@ -838,11 +877,11 @@ async function main() {
           productId: product.id,
           sku: `${product.slug}-${colorId}-${sizeId}`,
           priceAbsolute: product.basePrice,
-          stock: Math.floor(Math.random() * 20) + 5, // Random stock between 5-25
+          stock: Math.floor(Math.random() * 20) + 5, // Stok acak 5–25
         },
       });
 
-      // Link option values to variant
+      // Tautkan nilai opsi ke varian
       await prisma.variantOptionValue.updateMany({
         where: { id: { in: [colorId, sizeId] } },
         data: { variantId: variant.id },
@@ -850,54 +889,56 @@ async function main() {
     }
   }
 
-  console.log('🎨 Created variants for clothing products');
+  console.log("🎨 Varian untuk produk fashion berhasil dibuat");
 
-  
-  // Create variant options for tech products
+  // Buat opsi varian untuk produk teknologi (yang relevan)
   for (const product of createdTechProducts) {
-    // Create variants for specific tech products that benefit from variations
-    if (product.slug.includes('smartphone') || product.slug.includes('laptop') || product.slug.includes('tablet')) {
-      // Create Storage option type
+    if (
+      product.slug.includes("smartphone") ||
+      product.slug.includes("laptop") ||
+      product.slug.includes("tablet")
+    ) {
+      // Tipe opsi Penyimpanan
       const storageOptionType = await prisma.variantOptionType.create({
         data: {
           productId: product.id,
-          name: 'Storage',
+          name: "Penyimpanan",
         },
       });
 
-      // Create Color option type
+      // Tipe opsi Warna
       const colorOptionType = await prisma.variantOptionType.create({
         data: {
           productId: product.id,
-          name: 'Color',
+          name: "Warna",
         },
       });
 
-      // Create storage values
+      // Nilai penyimpanan
       await prisma.variantOptionValue.createMany({
-        data: product.slug.includes('smartphone')
+        data: product.slug.includes("smartphone")
           ? [
-              { typeId: storageOptionType.id, name: '128GB' },
-              { typeId: storageOptionType.id, name: '256GB' },
-              { typeId: storageOptionType.id, name: '512GB' },
+              { typeId: storageOptionType.id, name: "128GB" },
+              { typeId: storageOptionType.id, name: "256GB" },
+              { typeId: storageOptionType.id, name: "512GB" },
             ]
           : [
-              { typeId: storageOptionType.id, name: '256GB' },
-              { typeId: storageOptionType.id, name: '512GB' },
-              { typeId: storageOptionType.id, name: '1TB' },
+              { typeId: storageOptionType.id, name: "256GB" },
+              { typeId: storageOptionType.id, name: "512GB" },
+              { typeId: storageOptionType.id, name: "1TB" },
             ],
       });
 
-      // Create color values
+      // Nilai warna
       await prisma.variantOptionValue.createMany({
         data: [
-          { typeId: colorOptionType.id, name: 'Space Gray' },
-          { typeId: colorOptionType.id, name: 'Silver' },
-          { typeId: colorOptionType.id, name: 'Midnight Blue' },
+          { typeId: colorOptionType.id, name: "Abu-abu Space" }, // Space Gray
+          { typeId: colorOptionType.id, name: "Perak" }, // Silver
+          { typeId: colorOptionType.id, name: "Biru Tua" }, // Midnight Blue
         ],
       });
 
-      // Get the created values for variant creation
+      // Ambil nilai yang dibuat
       const createdStorageValues = await prisma.variantOptionValue.findMany({
         where: { typeId: storageOptionType.id },
       });
@@ -905,8 +946,8 @@ async function main() {
         where: { typeId: colorOptionType.id },
       });
 
-      // Create variants (combinations of storage and color)
-      const variantCombinations = [];
+      // Buat varian (kombinasi penyimpanan & warna)
+      const variantCombinations: Array<[string, string]> = [];
       for (const storage of createdStorageValues) {
         for (const color of createdColorValues) {
           variantCombinations.push([storage.id, color.id]);
@@ -914,12 +955,12 @@ async function main() {
       }
 
       for (const [storageId, colorId] of variantCombinations) {
-        // Calculate price delta based on storage
+        // Hitung selisih harga berdasarkan penyimpanan
         let priceDelta = 0;
-        const storage = createdStorageValues.find(s => s.id === storageId);
-        if (storage?.name.includes('512')) priceDelta = 2000000;
-        else if (storage?.name.includes('1TB')) priceDelta = 5000000;
-        else if (storage?.name.includes('256')) priceDelta = 1000000;
+        const storage = createdStorageValues.find((s) => s.id === storageId);
+        if (storage?.name.includes("512")) priceDelta = 2000000;
+        else if (storage?.name.includes("1TB")) priceDelta = 5000000;
+        else if (storage?.name.includes("256")) priceDelta = 1000000;
 
         const variant = await prisma.variant.create({
           data: {
@@ -927,11 +968,11 @@ async function main() {
             sku: `${product.slug}-${storageId}-${colorId}`,
             priceAbsolute: product.basePrice,
             priceDelta: priceDelta,
-            stock: Math.floor(Math.random() * 15) + 3, // Random stock between 3-18
+            stock: Math.floor(Math.random() * 15) + 3, // Stok acak 3–18
           },
         });
 
-        // Link option values to variant
+        // Tautkan nilai opsi ke varian
         await prisma.variantOptionValue.updateMany({
           where: { id: { in: [storageId, colorId] } },
           data: { variantId: variant.id },
@@ -940,10 +981,10 @@ async function main() {
     }
   }
 
-  console.log('💻 Created variants for tech products');
+  console.log("💻 Varian untuk produk teknologi berhasil dibuat");
 
-  // Create Discounts
-  // Store-scoped discount for clothing
+  // Buat Diskon
+  // Diskon lingkup toko untuk fashion
   await prisma.discount.create({
     data: {
       scope: DiscountScope.STORE,
@@ -952,12 +993,12 @@ async function main() {
       priority: 100,
       stackable: false,
       startAt: new Date(),
-      endAt: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // 30 days from now
+      endAt: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // 30 hari dari sekarang
       storeId: clothingStore.id,
     },
   });
 
-  // Product-scoped discount for specific watch
+  // Diskon lingkup produk untuk produk tertentu
   await prisma.discount.create({
     data: {
       scope: DiscountScope.PRODUCT,
@@ -966,12 +1007,12 @@ async function main() {
       priority: 50,
       stackable: false,
       startAt: new Date(),
-      endAt: new Date(Date.now() + 15 * 24 * 60 * 60 * 1000), // 15 days from now
+      endAt: new Date(Date.now() + 15 * 24 * 60 * 60 * 1000), // 15 hari dari sekarang
       productId: createdTechProducts[0].id,
     },
   });
 
-  // Global discount
+  // Diskon global
   await prisma.discount.create({
     data: {
       scope: DiscountScope.GLOBAL,
@@ -980,26 +1021,39 @@ async function main() {
       priority: 200,
       stackable: true,
       startAt: new Date(),
-      endAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7 days from now
+      endAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7 hari dari sekarang
     },
   });
 
-  console.log('💰 Created discounts');
+  console.log("💰 Diskon berhasil dibuat");
 
-  console.log('✅ Seed completed successfully!');
-  console.log('\n📊 Summary:');
-  console.log(`- Users: 3`);
-  console.log(`- Stores: 2`);
-  console.log(`- Categories: 20`);
-  console.log(`- Products: ${createdFashionProducts.length + createdTechProducts.length}`);
-  console.log(`- Fashion Store Products: ${createdFashionProducts.length}`);
-  console.log(`- Tech Hub Products: ${createdTechProducts.length}`);
-  console.log(`- Variants: ${createdFashionProducts.length * 9 + createdTechProducts.filter(p => p.slug.includes('smartphone') || p.slug.includes('laptop') || p.slug.includes('tablet')).length * 9}`);
-  console.log(`- Discounts: 3`);
-  console.log('\n🏪 Stores:');
-  console.log(`- Fashion Store (fashion-store): Fashion and apparel products`);
-  console.log(`- Tech Hub (tech-hub): Electronics and gadgets`);
-  console.log('\n🔑 Login credentials:');
+  console.log("✅ Seed selesai tanpa kendala!");
+  console.log("\n📊 Ringkasan:");
+  console.log(`- Pengguna: 3`);
+  console.log(`- Toko: 2`);
+  console.log(`- Kategori: 20`);
+  console.log(
+    `- Produk: ${createdFashionProducts.length + createdTechProducts.length}`
+  );
+  console.log(`- Produk Toko Fashion: ${createdFashionProducts.length}`);
+  console.log(`- Produk Pusat Teknologi: ${createdTechProducts.length}`);
+  console.log(
+    `- Varian: ${
+      createdFashionProducts.length * 9 +
+      createdTechProducts.filter(
+        (p) =>
+          p.slug.includes("smartphone") ||
+          p.slug.includes("laptop") ||
+          p.slug.includes("tablet")
+      ).length *
+        9
+    }`
+  );
+  console.log(`- Diskon: 3`);
+  console.log("\n🏪 Toko:");
+  console.log(`- Toko Fashion (fashion-store): Produk fashion & apparel`);
+  console.log(`- Pusat Teknologi (tech-hub): Elektronik & gawai`);
+  console.log("\n🔑 Kredensial login:");
   console.log(`- Owner: owner@example.com / password123`);
   console.log(`- Editor: editor@example.com / password123`);
   console.log(`- Viewer: viewer@example.com / password123`);
@@ -1007,7 +1061,7 @@ async function main() {
 
 main()
   .catch((e) => {
-    console.error('❌ Seed failed:', e);
+    console.error("❌ Seed gagal:", e);
     process.exit(1);
   })
   .finally(async () => {

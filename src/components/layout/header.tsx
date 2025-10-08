@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Button } from "@/components/ui/button";
@@ -8,6 +9,7 @@ import { Badge } from "@/components/ui/badge";
 
 export function Header() {
   const pathname = usePathname();
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const isActive = (path: string) => {
     if (path === "/" && pathname === "/") return true;
@@ -38,21 +40,12 @@ export function Header() {
               Home
             </Link>
             <Link
-              href="/store/clothing"
+              href="/stores"
               className={`text-sm font-medium transition-colors hover:text-primary ${
-                isActive("/store/clothing") ? "text-primary" : "text-gray-600"
+                isActive("/stores") ? "text-primary" : "text-gray-600"
               }`}
             >
-              Clothing
-              <Badge variant="secondary" className="ml-2 text-xs">New</Badge>
-            </Link>
-            <Link
-              href="/store/watches"
-              className={`text-sm font-medium transition-colors hover:text-primary ${
-                isActive("/store/watches") ? "text-primary" : "text-gray-600"
-              }`}
-            >
-              Watches
+              All Stores
             </Link>
           </nav>
 
@@ -62,54 +55,64 @@ export function Header() {
               <CartButton />
             </Link>
 
-            {/* Mobile menu button - can be implemented later */}
-            <Button variant="ghost" size="sm" className="md:hidden">
+            {/* Mobile menu button */}
+            <Button
+              variant="ghost"
+              size="sm"
+              className="md:hidden"
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            >
               <svg
                 className="h-5 w-5"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
               >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M4 6h16M4 12h16M4 18h16"
-                />
+                {isMobileMenuOpen ? (
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M6 18L18 6M6 6l12 12"
+                  />
+                ) : (
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M4 6h16M4 12h16M4 18h16"
+                  />
+                )}
               </svg>
             </Button>
           </div>
         </div>
 
-        {/* Mobile navigation - can be expanded later */}
-        <div className="md:hidden pb-3 border-t">
-          <div className="flex flex-col space-y-2 pt-3">
-            <Link
-              href="/"
-              className={`text-sm font-medium transition-colors hover:text-primary px-3 py-2 rounded-md ${
-                isActive("/") ? "text-primary bg-gray-50" : "text-gray-600"
-              }`}
-            >
-              Home
-            </Link>
-            <Link
-              href="/store/clothing"
-              className={`text-sm font-medium transition-colors hover:text-primary px-3 py-2 rounded-md ${
-                isActive("/store/clothing") ? "text-primary bg-gray-50" : "text-gray-600"
-              }`}
-            >
-              Clothing
-            </Link>
-            <Link
-              href="/store/watches"
-              className={`text-sm font-medium transition-colors hover:text-primary px-3 py-2 rounded-md ${
-                isActive("/store/watches") ? "text-primary bg-gray-50" : "text-gray-600"
-              }`}
-            >
-              Watches
-            </Link>
+        {/* Mobile navigation */}
+        {isMobileMenuOpen && (
+          <div className="md:hidden pb-3 border-t">
+            <div className="flex flex-col space-y-2 pt-3">
+              <Link
+                href="/"
+                className={`text-sm font-medium transition-colors hover:text-primary px-3 py-2 rounded-md ${
+                  isActive("/") ? "text-primary bg-gray-50" : "text-gray-600"
+                }`}
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                Home
+              </Link>
+              <Link
+                href="/stores"
+                className={`text-sm font-medium transition-colors hover:text-primary px-3 py-2 rounded-md ${
+                  isActive("/stores") ? "text-primary bg-gray-50" : "text-gray-600"
+                }`}
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                All Stores
+              </Link>
+            </div>
           </div>
-        </div>
+        )}
       </div>
     </header>
   );
