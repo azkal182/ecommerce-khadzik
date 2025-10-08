@@ -18,6 +18,10 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Dual Store - Indonesia's Premium Shopping Destination",
   description: "Discover amazing products from our curated stores. Fashion, watches, and more - all in one place.",
+  colorScheme: 'light',
+  other: {
+    'color-scheme': 'light only',
+  },
 };
 
 export default function RootLayout({
@@ -26,9 +30,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="id">
+    <html lang="id" className="light">
+      <head>
+        <meta name="color-scheme" content="light only" />
+        <meta name="theme-color" content="#ffffff" />
+      </head>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased store-theme-transition`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased store-theme-transition bg-white text-gray-900`}
         suppressHydrationWarning
       >
         <SessionProviderWrapper>

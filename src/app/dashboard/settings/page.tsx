@@ -42,8 +42,8 @@ export default function SettingsPage() {
     twoFactorAuth: false,
     sessionTimeout: 24,
 
-    // Theme Settings
-    darkMode: false,
+    // Theme Settings - Dark mode disabled
+    darkMode: false, // Permanently disabled - dark mode causes UI issues
     compactMode: false,
 
     // API Settings

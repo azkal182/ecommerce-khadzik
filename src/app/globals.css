@@ -1,20 +1,20 @@
 @import "tailwindcss";
 
 :root {
-  /* Default theme variables */
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Light mode enforced - default theme variables */
+  --background: #ffffff !important;
+  --foreground: #171717 !important;
 
   /* Store theme variables (will be overridden by store-specific themes) */
   --color-primary: #3b82f6;
   --color-secondary: #1d4ed8;
   --color-accent: #f59e0b;
-  --color-bg: #ffffff;
-  --color-fg: #111827;
+  --color-bg: #ffffff !important;
+  --color-fg: #111827 !important;
   --color-muted: #6b7280;
   --color-border: #e5e7eb;
-  --color-card: #ffffff;
-  --color-card-foreground: #111827;
+  --color-card: #ffffff !important;
+  --color-card-foreground: #111827 !important;
 }
 
 @theme inline {
@@ -33,36 +33,37 @@
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
+/* Dark mode disabled - media query commented out */
+/* @media (prefers-color-scheme: dark) {
   :root {
     --background: #0a0a0a;
     --foreground: #ededed;
   }
-}
+} */
 
-/* Store-specific theme classes */
+/* Store-specific theme classes - light mode enforced */
 [data-store="clothing"] {
   --color-primary: #3b82f6;
   --color-secondary: #1d4ed8;
   --color-accent: #f59e0b;
-  --color-bg: #ffffff;
-  --color-fg: #111827;
+  --color-bg: #ffffff !important;
+  --color-fg: #111827 !important;
   --color-muted: #6b7280;
   --color-border: #e5e7eb;
-  --color-card: #ffffff;
-  --color-card-foreground: #111827;
+  --color-card: #ffffff !important;
+  --color-card-foreground: #111827 !important;
 }
 
 [data-store="watches"] {
   --color-primary: #000000;
   --color-secondary: #1f2937;
   --color-accent: #fbbf24;
-  --color-bg: #f9fafb;
-  --color-fg: #111827;
+  --color-bg: #f9fafb !important;
+  --color-fg: #111827 !important;
   --color-muted: #6b7280;
   --color-border: #d1d5db;
-  --color-card: #ffffff;
-  --color-card-foreground: #111827;
+  --color-card: #ffffff !important;
+  --color-card-foreground: #111827 !important;
 }
 
 /* Utility classes for store theming */
@@ -70,10 +71,42 @@
   transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
 }
 
+/* Force light mode and prevent system dark mode */
 body {
-  background: var(--background);
-  color: var(--foreground);
+  background: #ffffff !important;
+  color: #171717 !important;
   font-family: Arial, Helvetica, sans-serif;
+}
+
+/* Prevent any system-level dark mode overrides */
+html, body {
+  color-scheme: light only !important;
+  forced-color-adjust: none !important;
+}
+
+/* Override any potential dark mode classes */
+.dark, [data-theme="dark"] {
+  --background: #ffffff !important;
+  --foreground: #171717 !important;
+  --color-bg: #ffffff !important;
+  --color-fg: #111827 !important;
+  --color-card: #ffffff !important;
+  --color-card-foreground: #111827 !important;
+}
+
+/* Ensure text remains readable in all cases */
+* {
+  color: inherit;
+}
+
+/* Force light backgrounds for common elements */
+.bg-gray-900, .bg-gray-800, .bg-gray-700 {
+  background-color: #ffffff !important;
+  color: #171717 !important;
+}
+
+.text-white, .text-gray-100, .text-gray-200 {
+  color: #171717 !important;
 }
 
 /* Component styles */
