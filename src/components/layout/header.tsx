@@ -2,13 +2,14 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { CartButton } from "@/components/cart/cart-button";
 import { Badge } from "@/components/ui/badge";
 
 export function Header() {
   const pathname = usePathname();
+  const router = useRouter();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const isActive = (path: string) => {
@@ -51,9 +52,7 @@ export function Header() {
 
           {/* Right side actions */}
           <div className="flex items-center space-x-4">
-            <Link href="/cart">
-              <CartButton />
-            </Link>
+            <CartButton onClick={() => router.push('/cart')} />
 
             {/* Mobile menu button */}
             <Button

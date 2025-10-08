@@ -7,7 +7,11 @@ import { Badge } from "@/components/ui/badge";
 import { useCart } from "@/contexts/cart-context";
 import { CartDrawer } from "./cart-drawer";
 
-export function CartButton() {
+interface CartButtonProps {
+  onClick?: () => void;
+}
+
+export function CartButton({ onClick }: CartButtonProps) {
   const [isOpen, setIsOpen] = useState(false);
   const { cart } = useCart();
 
@@ -16,7 +20,13 @@ export function CartButton() {
       <Button
         variant="outline"
         size="sm"
-        onClick={() => setIsOpen(true)}
+        onClick={() => {
+          if (onClick) {
+            onClick();
+          } else {
+            setIsOpen(true);
+          }
+        }}
         className="relative"
       >
         <ShoppingCart className="h-5 w-5" />

@@ -612,8 +612,8 @@ function ProductCard({ product, store, viewMode }: ProductCardProps) {
           </div>
         )}
         {!inStock && (
-          <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-            <span className="text-white font-semibold text-sm sm:text-base">Out of Stock</span>
+          <div className="absolute inset-0 bg-black bg-opacity-30 flex items-center justify-center">
+            <span className="text-white font-semibold text-sm sm:text-base">Habis</span>
           </div>
         )}
       </div>
