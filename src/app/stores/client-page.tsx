@@ -67,9 +67,9 @@ export default function StoresClient({ stores: initialStores }: StoresClientProp
       <div className="bg-white border-b">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
           <div className="text-center">
-            <h1 className="text-4xl font-bold text-gray-900 mb-4">Browse Our Stores</h1>
+            <h1 className="text-4xl font-bold text-gray-900 mb-4">Jelajahi Toko Kami</h1>
             <p className="text-xl text-gray-600 mb-8">
-              Discover amazing products from {stores.length} carefully selected stores
+              Temukan produk menakjubkan dari {stores.length} toko pilihan terbaik
             </p>
 
             {/* Search */}
@@ -77,7 +77,7 @@ export default function StoresClient({ stores: initialStores }: StoresClientProp
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
                 <Input
-                  placeholder="Search stores..."
+                  placeholder="Cari toko..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                   className="pl-10"
@@ -94,10 +94,10 @@ export default function StoresClient({ stores: initialStores }: StoresClientProp
           <div className="text-center py-12">
             <StoreIcon className="h-12 w-12 text-gray-400 mx-auto mb-4" />
             <h3 className="text-lg font-medium text-gray-900 mb-2">
-              {searchTerm ? "No stores found" : "No stores available"}
+              {searchTerm ? "Tidak ada toko yang ditemukan" : "Belum ada toko tersedia"}
             </h3>
             <p className="text-gray-600">
-              {searchTerm ? "Try adjusting your search terms" : "Check back later for new stores"}
+              {searchTerm ? "Coba ubah kata kunci pencarian" : "Kembali lagi nanti untuk toko baru"}
             </p>
           </div>
         ) : (
@@ -128,7 +128,7 @@ export default function StoresClient({ stores: initialStores }: StoresClientProp
                     <div className="flex items-center text-sm text-gray-600 space-x-4">
                       <div className="flex items-center space-x-1">
                         <Package className="h-4 w-4" />
-                        <span>{store._count.products} Products</span>
+                        <span>{store._count.products} Produk</span>
                       </div>
                       <div className="flex items-center space-x-1">
                         <MapPin className="h-4 w-4" />
@@ -139,7 +139,7 @@ export default function StoresClient({ stores: initialStores }: StoresClientProp
 
                   <div className="space-y-3">
                     <p className="text-gray-600 text-sm">
-                      Explore our curated selection of quality products with fast delivery across Indonesia.
+                      Jelajahi pilihan produk berkualitas dengan pengiriman cepat ke seluruh Indonesia.
                     </p>
 
                     <div className="flex items-center space-x-3">
@@ -149,7 +149,7 @@ export default function StoresClient({ stores: initialStores }: StoresClientProp
                           style={{ backgroundColor: store.theme.primary }}
                         >
                           <ShoppingBag className="h-4 w-4 mr-2" />
-                          Visit Store
+                          Kunjungi Toko
                         </Button>
                       </Link>
                       <Button variant="outline" size="sm" asChild>
@@ -169,14 +169,14 @@ export default function StoresClient({ stores: initialStores }: StoresClientProp
         {searchTerm && filteredStores.length > 0 && (
           <div className="text-center mt-8">
             <p className="text-gray-600">
-              Found {filteredStores.length} store{filteredStores.length !== 1 ? "s" : ""} matching &quot;{searchTerm}&quot;
+              Ditemukan {filteredStores.length} toko yang cocok dengan &quot;{searchTerm}&quot;
             </p>
             <Button
               variant="outline"
               onClick={() => setSearchTerm("")}
               className="mt-2"
             >
-              Clear Search
+              Hapus Pencarian
             </Button>
           </div>
         )}
@@ -186,18 +186,18 @@ export default function StoresClient({ stores: initialStores }: StoresClientProp
       <div className="bg-gray-900 text-white py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-3xl font-bold mb-4">
-            Can&apos;t Find What You&apos;re Looking For?
+            Tidak Menemukan Yang Anda Cari?
           </h2>
           <p className="text-xl text-gray-300 mb-8">
-            We&apos;re constantly adding new stores and products. Check back soon or contact us for special requests.
+            Kami terus menambahkan toko dan produk baru. Kembali lagi segera atau hubungi kami untuk permintaan khusus.
           </p>
           <div className="flex justify-center space-x-4">
             <Button size="lg" variant="outline" className="border-white text-white hover:bg-white hover:text-gray-900">
-              Contact Support
+              Hubungi Dukungan
             </Button>
             <Link href="/">
               <Button size="lg" className="bg-white text-gray-900 hover:bg-gray-100">
-                Back to Home
+                Kembali ke Beranda
               </Button>
             </Link>
           </div>

@@ -37,7 +37,7 @@ export function Header() {
                 isActive("/") ? "text-primary" : "text-gray-600"
               }`}
             >
-              Home
+              Beranda
             </Link>
             <Link
               href="/stores"
@@ -45,7 +45,7 @@ export function Header() {
                 isActive("/stores") ? "text-primary" : "text-gray-600"
               }`}
             >
-              All Stores
+              Semua Toko
             </Link>
           </nav>
 
@@ -99,7 +99,7 @@ export function Header() {
                 }`}
                 onClick={() => setIsMobileMenuOpen(false)}
               >
-                Home
+                Beranda
               </Link>
               <Link
                 href="/stores"
@@ -108,7 +108,7 @@ export function Header() {
                 }`}
                 onClick={() => setIsMobileMenuOpen(false)}
               >
-                All Stores
+                Semua Toko
               </Link>
             </div>
           </div>

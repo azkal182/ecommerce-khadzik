@@ -243,7 +243,7 @@ function StorePageContent({
             <Card>
               <CardContent className="p-4 sm:p-6">
                 <div className="flex justify-between items-center mb-4">
-                  <h3 className="font-semibold text-base sm:text-lg">Filters</h3>
+                  <h3 className="font-semibold text-base sm:text-lg">Filter</h3>
                   <Button
                     variant="ghost"
                     size="sm"
@@ -570,7 +570,7 @@ function ProductCard({ product, store, viewMode }: ProductCardProps) {
                   inStock ? "text-green-600" : "text-red-600"
                 }`}
               >
-                {inStock ? "In Stock" : "Out of Stock"}
+                {inStock ? "Tersedia" : "Habis"}
               </div>
             </div>
           </div>
@@ -640,7 +640,7 @@ function ProductCard({ product, store, viewMode }: ProductCardProps) {
               inStock ? "text-green-600" : "text-red-600"
             }`}
           >
-            {inStock ? "In Stock" : "Out of Stock"}
+            {inStock ? "Tersedia" : "Habis"}
           </div>
         </div>
         <div className="flex space-x-2">

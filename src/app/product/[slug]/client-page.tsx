@@ -70,28 +70,68 @@ export default function ProductDetailClient({
   };
 
   const handleOptionSelect = (optionTypeId: string, optionValueId: string) => {
-    setSelectedOptions(prev => ({
-      ...prev,
-      [optionTypeId]: optionValueId,
-    }));
+    setSelectedOptions(prev => {
+      const newOptions = {
+        ...prev,
+        [optionTypeId]: optionValueId,
+      };
+
+      // Check if this selection creates an invalid combination
+      // If so, clear other options to allow free selection
+      const hasValidVariant = product.variants.some(variant => {
+        if (variant.stock === 0) return false;
+
+        const selectedOptionIds = Object.values(newOptions).sort();
+        const variantOptionIds = variant.optionValues.map(ov => ov.id).sort();
+
+        return JSON.stringify(selectedOptionIds) === JSON.stringify(variantOptionIds);
+      });
+
+      // If no valid variant exists with current selection, allow user to continue selecting
+      // but don't restrict them from changing their mind
+      return newOptions;
+    });
   };
 
   const getAvailableOptionsForType = (optionTypeId: string) => {
     const availableValues = new Set<string>();
 
+    // If no options are selected, show all available values for this type
+    if (Object.keys(selectedOptions).length === 0) {
+      product.variants.forEach(variant => {
+        if (variant.stock > 0) {
+          variant.optionValues
+            .filter(ov => ov.type.id === optionTypeId)
+            .forEach(ov => availableValues.add(ov.id));
+        }
+      });
+      return Array.from(availableValues);
+    }
+
+    // If options are selected, check combinations more flexibly
     product.variants.forEach(variant => {
+      if (variant.stock === 0) return;
+
       const otherOptionsSelected = Object.entries(selectedOptions)
         .filter(([typeId]) => typeId !== optionTypeId)
         .map(([_, valueId]) => valueId);
 
-      const hasAllOtherOptions = otherOptionsSelected.every(valueId =>
-        variant.optionValues.some(ov => ov.id === valueId)
-      );
-
-      if (hasAllOtherOptions || Object.keys(selectedOptions).length === 0) {
+      // If no other options are selected yet, show all values that have any variant with stock
+      if (otherOptionsSelected.length === 0) {
         variant.optionValues
           .filter(ov => ov.type.id === optionTypeId)
           .forEach(ov => availableValues.add(ov.id));
+      } else {
+        // Check if this variant has the selected options for other types
+        const hasCompatibleOptions = otherOptionsSelected.every(valueId =>
+          variant.optionValues.some(ov => ov.id === valueId)
+        );
+
+        if (hasCompatibleOptions) {
+          variant.optionValues
+            .filter(ov => ov.type.id === optionTypeId)
+            .forEach(ov => availableValues.add(ov.id));
+        }
       }
     });
 
@@ -104,11 +144,40 @@ export default function ProductDetailClient({
   };
 
   const handleAddToCart = () => {
-    if (!selectedVariant) return;
+    // Check if product has variants but no variant is selected
+    if (product.optionTypes.length > 0 && !selectedVariant) {
+      alert("Silakan pilih semua pilihan variant terlebih dahulu sebelum menambah ke keranjang.");
+      return;
+    }
+
+    // For products without variants, find first available variant with stock
+    let variantToAdd = selectedVariant;
+
+    if (!variantToAdd) {
+      // For products without variants, find first variant with stock
+      const availableVariant = product.variants.find(v => v.stock > 0);
+      if (!availableVariant) {
+        alert("Maaf, semua variant untuk produk ini sedang habis.");
+        return;
+      }
+      variantToAdd = availableVariant;
+    }
+
+    // Check if selected variant has stock
+    if (variantToAdd.stock <= 0) {
+      alert("Maaf, variant yang dipilih sedang habis. Silakan pilih variant lain.");
+      return;
+    }
+
+    // Check if quantity is valid
+    if (quantity > variantToAdd.stock) {
+      alert(`Maaf, stok tidak mencukupi. Tersedia hanya ${variantToAdd.stock} unit.`);
+      return;
+    }
 
     addToCart(
       product.id,
-      selectedVariant.id,
+      variantToAdd.id,
       quantity,
       {
         id: product.id,
@@ -244,7 +313,24 @@ export default function ProductDetailClient({
             {/* Variant Selection */}
             {product.optionTypes.length > 0 && (
               <div className="space-y-4">
-                <h3 className="text-sm font-medium text-gray-700">Options</h3>
+                <div>
+                  <div className="flex items-center justify-between mb-2">
+                    <h3 className="text-sm font-medium text-gray-700">Pilih Variant</h3>
+                    <span className="text-xs text-gray-500">
+                      {Object.keys(selectedOptions).length} / {product.optionTypes.length} dipilih
+                    </span>
+                  </div>
+                  {Object.keys(selectedOptions).length > 0 && !selectedVariant && (
+                    <p className="text-xs text-amber-600 mt-1">
+                      ⚠️ Silakan lengkapi semua pilihan variant ({product.optionTypes.length - Object.keys(selectedOptions).length} tersisa)
+                    </p>
+                  )}
+                  {Object.keys(selectedOptions).length === 0 && (
+                    <p className="text-xs text-gray-500 mt-1">
+                      📝 Pilih semua variant untuk melihat harga dan menambah ke keranjang
+                    </p>
+                  )}
+                </div>
                 {product.optionTypes.map((optionType) => (
                   <div key={optionType.id}>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -255,26 +341,60 @@ export default function ProductDetailClient({
                         const isSelected = selectedOptions[optionType.id] === value.id;
                         const isAvailable = getOptionAvailability(optionType.id, value.id);
 
+                        // Check if selecting this value would lead to any valid variant
+                        const wouldLeadToValidVariant = product.variants.some(variant => {
+                          if (variant.stock === 0) return false;
+
+                          const prospectiveOptions = {
+                            ...selectedOptions,
+                            [optionType.id]: value.id
+                          };
+
+                          const selectedOptionIds = Object.values(prospectiveOptions).sort();
+                          const variantOptionIds = variant.optionValues.map(ov => ov.id).sort();
+
+                          return JSON.stringify(selectedOptionIds) === JSON.stringify(variantOptionIds);
+                        });
+
                         return (
                           <button
                             key={value.id}
-                            className={`px-4 py-2 border rounded-md text-sm font-medium transition-colors ${
+                            className={`px-4 py-2 border rounded-md text-sm font-medium transition-all ${
                               isSelected
-                                ? "border-primary bg-primary text-white"
+                                ? "border-primary bg-primary text-white scale-105 shadow-md"
                                 : isAvailable
-                                ? "border-gray-300 hover:border-gray-400"
+                                ? "border-gray-300 hover:border-gray-400 hover:scale-105 hover:shadow-sm"
+                                : wouldLeadToValidVariant
+                                ? "border-gray-300 hover:border-yellow-400 text-gray-600 hover:text-gray-800"
                                 : "border-gray-200 text-gray-400 cursor-not-allowed opacity-50"
                             }`}
-                            onClick={() => isAvailable && handleOptionSelect(optionType.id, value.id)}
-                            disabled={!isAvailable}
+                            onClick={() => (isAvailable || wouldLeadToValidVariant) && handleOptionSelect(optionType.id, value.id)}
+                            disabled={!(isAvailable || wouldLeadToValidVariant)}
+                            title={!isAvailable && !wouldLeadToValidVariant ? "Tidak tersedia" :
+                                   !isAvailable && wouldLeadToValidVariant ? "Pilih opsi lain terlebih dahulu" : value.name}
                           >
                             {value.name}
+                            {!isAvailable && wouldLeadToValidVariant && (
+                              <span className="ml-1 text-xs">⚠️</span>
+                            )}
                           </button>
                         );
                       })}
                     </div>
                   </div>
                 ))}
+              </div>
+            )}
+
+            {/* Reset Selection Button */}
+            {Object.keys(selectedOptions).length > 0 && (
+              <div className="flex justify-center">
+                <button
+                  onClick={() => setSelectedOptions({})}
+                  className="text-sm text-gray-500 hover:text-gray-700 underline"
+                >
+                  Reset pilihan variant
+                </button>
               </div>
             )}
 
@@ -333,14 +453,80 @@ export default function ProductDetailClient({
                 </div>
               </div>
 
+              {/* Variant Selection Warning */}
+              {product.optionTypes.length > 0 && !selectedVariant && (
+                <div className="bg-amber-50 border border-amber-200 rounded-md p-3 mb-4">
+                  <div className="flex items-center">
+                    <div className="text-amber-600 mr-2">
+                      ⚠️
+                    </div>
+                    <div className="text-sm text-amber-800">
+                      <span className="font-medium">Pilih variant terlebih dahulu</span>
+                      <p className="text-xs mt-1">Silakan pilih semua pilihan variant yang tersedia</p>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Out of Stock Warning */}
+              {selectedVariant && selectedVariant.stock <= 0 && (
+                <div className="bg-red-50 border border-red-200 rounded-md p-3 mb-4">
+                  <div className="flex items-center">
+                    <div className="text-red-600 mr-2">
+                      ❌
+                    </div>
+                    <div className="text-sm text-red-800">
+                      <span className="font-medium">Variant habis</span>
+                      <p className="text-xs mt-1">Silakan pilih variant lain yang tersedia</p>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Insufficient Stock Warning */}
+              {selectedVariant && selectedVariant.stock > 0 && quantity > selectedVariant.stock && (
+                <div className="bg-orange-50 border border-orange-200 rounded-md p-3 mb-4">
+                  <div className="flex items-center">
+                    <div className="text-orange-600 mr-2">
+                      ⚠️
+                    </div>
+                    <div className="text-sm text-orange-800">
+                      <span className="font-medium">Stok tidak mencukupi</span>
+                      <p className="text-xs mt-1">Tersedia hanya {selectedVariant.stock} unit</p>
+                    </div>
+                  </div>
+                </div>
+              )}
+
               <Button
                 className="w-full"
                 size="lg"
                 onClick={handleAddToCart}
-                disabled={!selectedVariant || !inStock || quantity > (selectedVariant?.stock || 0)}
+                disabled={
+                  (product.optionTypes.length > 0 && !selectedVariant) ||
+                  !inStock ||
+                  (selectedVariant && selectedVariant.stock <= 0) ||
+                  quantity > (selectedVariant?.stock || 0)
+                }
+                variant={
+                  product.optionTypes.length > 0 && !selectedVariant ?
+                    "secondary" :
+                    "default"
+                }
               >
                 <ShoppingCart className="h-5 w-5 mr-2" />
-                {selectedVariant && isInCart(product.id, selectedVariant.id) ? "Update Cart" : "Add to Cart"}
+                {product.optionTypes.length > 0 && !selectedVariant ?
+                  "Pilih Variant Terlebih Dahulu" :
+                  selectedVariant && selectedVariant.stock <= 0 ?
+                    "Variant Habis" :
+                  selectedVariant && quantity > selectedVariant.stock ?
+                    "Stok Tidak Mencukupi" :
+                  selectedVariant && isInCart(product.id, selectedVariant.id) ?
+                    "Perbarui Keranjang" :
+                    !inStock ?
+                      "Stok Habis" :
+                      "Tambah ke Keranjang"
+                }
               </Button>
             </div>
           </div>
@@ -349,7 +535,7 @@ export default function ProductDetailClient({
         {/* Related Products */}
         {relatedProducts.length > 0 && (
           <div className="mt-16">
-            <h2 className="text-2xl font-bold text-gray-900 mb-8">Related Products</h2>
+            <h2 className="text-2xl font-bold text-gray-900 mb-8">Produk Terkait</h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
               {relatedProducts.map((relatedProduct) => (
                 <Card key={relatedProduct.id} className="overflow-hidden">
@@ -376,7 +562,7 @@ export default function ProductDetailClient({
                     </div>
                     <Link href={`/product/${relatedProduct.slug}`}>
                       <Button variant="outline" size="sm" className="w-full">
-                        View Details
+                        Lihat Detail
                       </Button>
                     </Link>
                   </CardContent>

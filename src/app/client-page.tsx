@@ -92,21 +92,21 @@ export default function HomeClient({ stores, products, stats }: HomeClientProps)
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
           <div className="text-center">
             <h1 className="text-4xl md:text-6xl font-bold mb-6">
-              Welcome to Dual Store
+              Selamat Datang di Dual Store
             </h1>
             <p className="text-xl md:text-2xl mb-8 text-blue-100">
-              Discover amazing products from our curated collection of premium stores across Indonesia
+              Temukan produk menakjubkan dari koleksi pilihan toko premium di seluruh Indonesia
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link href="/stores">
                 <Button size="lg" className="bg-white text-blue-600 hover:bg-gray-100">
                   <StoreIcon className="h-5 w-5 mr-2" />
-                  Browse Stores
+                  Jelajahi Toko
                 </Button>
               </Link>
               <Button size="lg" variant="outline" className="border-white text-white hover:bg-white hover:text-blue-600">
                 <ShoppingBag className="h-5 w-5 mr-2" />
-                Shop Now
+                Belanja Sekarang
               </Button>
             </div>
           </div>
@@ -123,7 +123,7 @@ export default function HomeClient({ stores, products, stats }: HomeClientProps)
               </div>
               <div className="space-y-2">
                 <h3 className="text-3xl font-bold text-gray-900">{stats.totalStores}</h3>
-                <p className="text-gray-600">Active Stores</p>
+                <p className="text-gray-600">Toko Aktif</p>
               </div>
             </div>
             <div className="space-y-4">
@@ -132,7 +132,7 @@ export default function HomeClient({ stores, products, stats }: HomeClientProps)
               </div>
               <div className="space-y-2">
                 <h3 className="text-3xl font-bold text-gray-900">{stats.totalProducts}</h3>
-                <p className="text-gray-600">Products Available</p>
+                <p className="text-gray-600">Produk Tersedia</p>
               </div>
             </div>
             <div className="space-y-4">
@@ -152,8 +152,8 @@ export default function HomeClient({ stores, products, stats }: HomeClientProps)
       <section className="py-16 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">Featured Stores</h2>
-            <p className="text-xl text-gray-600">Discover our handpicked selection of premium stores</p>
+            <h2 className="text-3xl font-bold text-gray-900 mb-4">Toko Unggulan</h2>
+            <p className="text-xl text-gray-600">Temukan pilihan premium dari toko-toko terbaik kami</p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -168,19 +168,19 @@ export default function HomeClient({ stores, products, stats }: HomeClientProps)
                     <h3 className="text-lg font-semibold">{store.name}</h3>
                   </div>
                   <Badge className="absolute top-4 right-4 bg-white/20 text-white border-white/30">
-                    {store._count.products} products
+                    {store._count.products} produk
                   </Badge>
                 </div>
                 <CardContent className="p-6">
                   <p className="text-gray-600 mb-4">
-                    {store.description ? store.description.substring(0, 100) + '...' : 'Discover amazing products'}
+                    {store.description ? store.description.substring(0, 100) + '...' : 'Temukan produk menakjubkan'}
                   </p>
                   <Link href={`/store/${store.slug}`}>
                     <Button
                       className="w-full group-hover:scale-105 transition-transform"
                       style={{ backgroundColor: store.theme.primary }}
                     >
-                      Visit Store
+                      Kunjungi Toko
                       <ArrowRight className="h-4 w-4 ml-2" />
                     </Button>
                   </Link>
@@ -192,7 +192,7 @@ export default function HomeClient({ stores, products, stats }: HomeClientProps)
           <div className="text-center mt-12">
             <Link href="/stores">
               <Button size="lg" variant="outline">
-                View All Stores
+                Lihat Semua Toko
                 <ArrowRight className="h-5 w-5 ml-2" />
               </Button>
             </Link>
@@ -204,8 +204,8 @@ export default function HomeClient({ stores, products, stats }: HomeClientProps)
       <section className="py-16 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">Featured Products</h2>
-            <p className="text-xl text-gray-600">Latest additions from our stores</p>
+            <h2 className="text-3xl font-bold text-gray-900 mb-4">Produk Unggulan</h2>
+            <p className="text-xl text-gray-600">Produk terbaru dari toko-toko kami</p>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -237,7 +237,7 @@ export default function HomeClient({ stores, products, stats }: HomeClientProps)
                     </div>
                     <Link href={`/product/${product.slug}`}>
                       <Button size="sm" className="w-full mt-3">
-                        View Details
+                        Lihat Detail
                       </Button>
                     </Link>
                   </div>
@@ -252,21 +252,21 @@ export default function HomeClient({ stores, products, stats }: HomeClientProps)
       <section className="py-16 bg-gray-900 text-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-3xl font-bold mb-4">
-            Ready to Start Shopping?
+            Siap Memulai Berbelanja?
           </h2>
           <p className="text-xl text-gray-300 mb-8">
-            Join thousands of satisfied customers across Indonesia
+            Bergabunglah dengan ribuan pelanggan puas di seluruh Indonesia
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link href="/stores">
               <Button size="lg" className="bg-white text-gray-900 hover:bg-gray-100">
                 <ShoppingBag className="h-5 w-5 mr-2" />
-                Start Shopping
+                Mulai Berbelanja
               </Button>
             </Link>
             <Button size="lg" variant="outline" className="border-white text-white hover:bg-white hover:text-gray-900">
               <MessageCircle className="h-5 w-5 mr-2" />
-              Contact Support
+              Hubungi Dukungan
             </Button>
           </div>
         </div>

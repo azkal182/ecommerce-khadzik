@@ -119,11 +119,11 @@ export default function CartPage() {
               className="inline-flex items-center text-gray-600 hover:text-gray-900 mb-4"
             >
               <ArrowLeft className="h-4 w-4 mr-2" />
-              Back to Cart
+              Kembali ke Keranjang
             </button>
             <h1 className="text-3xl font-bold text-gray-900">Checkout</h1>
             <p className="text-gray-600 mt-1">
-              Complete your order from {checkoutStore.name}
+              Selesaikan pesanan Anda dari {checkoutStore.name}
             </p>
           </div>
 
@@ -147,18 +147,18 @@ export default function CartPage() {
           <div className="text-center">
             <Link href="/" className="inline-flex items-center text-gray-600 hover:text-gray-900 mb-8">
               <ArrowLeft className="h-4 w-4 mr-2" />
-              Continue Shopping
+              Lanjut Belanja
             </Link>
 
             <div className="bg-white rounded-lg shadow-sm p-12">
               <ShoppingCart className="h-16 w-16 mx-auto text-gray-400 mb-4" />
-              <h1 className="text-2xl font-bold text-gray-900 mb-2">Your cart is empty</h1>
+              <h1 className="text-2xl font-bold text-gray-900 mb-2">Keranjang Anda kosong</h1>
               <p className="text-gray-600 mb-8">
-                Looks like you haven&apos;t added any products to your cart yet.
+                Sepertinya Anda belum menambahkan produk ke keranjang belanja.
               </p>
               <Link href="/">
                 <Button size="lg">
-                  Start Shopping
+                  Mulai Belanja
                 </Button>
               </Link>
             </div>
@@ -178,11 +178,11 @@ export default function CartPage() {
           <div>
             <Link href="/" className="inline-flex items-center text-gray-600 hover:text-gray-900 mb-4">
               <ArrowLeft className="h-4 w-4 mr-2" />
-              Continue Shopping
+              Lanjut Belanja
             </Link>
-            <h1 className="text-3xl font-bold text-gray-900">Shopping Cart</h1>
+            <h1 className="text-3xl font-bold text-gray-900">Keranjang Belanja</h1>
             <p className="text-gray-600 mt-1">
-              {cart.totalItems} items • {cart.stores.length} stores
+              {cart.totalItems} produk • {cart.stores.length} toko
             </p>
           </div>
         </div>
@@ -204,7 +204,7 @@ export default function CartPage() {
                         >
                           {store.name}
                         </Link>
-                        <p className="text-sm text-gray-500">{store.items.length} items</p>
+                        <p className="text-sm text-gray-500">{store.items.length} produk</p>
                       </div>
                     </div>
                     <div className="flex items-center space-x-2">
@@ -239,7 +239,7 @@ export default function CartPage() {
                   {/* Store Checkout */}
                   <div className="flex justify-between items-center">
                     <div>
-                      <p className="text-sm text-gray-500">Store Subtotal</p>
+                      <p className="text-sm text-gray-500">Subtotal Toko</p>
                       <p className="text-xl font-bold">{formatPrice(store.subtotal)}</p>
                     </div>
                     <Button
@@ -250,12 +250,12 @@ export default function CartPage() {
                       {checkingOutStores.has(store.id) ? (
                         <>
                           <div className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
-                          <span>Processing...</span>
+                          <span>Memproses...</span>
                         </>
                       ) : (
                         <>
                           <MessageCircle className="h-4 w-4" />
-                          <span>Proceed to Checkout</span>
+                          <span>Lanjut ke Checkout</span>
                         </>
                       )}
                     </Button>
@@ -269,7 +269,7 @@ export default function CartPage() {
           <div className="lg:col-span-1">
             <Card className="sticky top-8">
               <CardContent className="p-6">
-                <h2 className="text-xl font-semibold mb-4">Order Summary</h2>
+                <h2 className="text-xl font-semibold mb-4">Ringkasan Pesanan</h2>
 
                 <div className="space-y-3 mb-6">
                   {cart.stores.map((store) => (
@@ -292,15 +292,15 @@ export default function CartPage() {
                 <div className="space-y-2 text-sm text-gray-600">
                   <div className="flex items-center space-x-2">
                     <Check className="h-4 w-4 text-green-500" />
-                    <span>Secure checkout via WhatsApp</span>
+                    <span>Checkout aman via WhatsApp</span>
                   </div>
                   <div className="flex items-center space-x-2">
                     <Check className="h-4 w-4 text-green-500" />
-                    <span>Separate checkout per store</span>
+                    <span>Checkout terpisah per toko</span>
                   </div>
                   <div className="flex items-center space-x-2">
                     <Check className="h-4 w-4 text-green-500" />
-                    <span>Personalized customer service</span>
+                    <span>Layanan pelanggan personal</span>
                   </div>
                 </div>
               </CardContent>
