@@ -6,6 +6,7 @@ import { prisma } from "@/lib/prisma";
 import { supabase } from "@/lib/supabase";
 import { generateUniqueSlug } from "@/lib/slug";
 import { z } from "zod";
+import { revalidatePath } from "next/cache";
 
 const createProductSchema = z.object({
   storeId: z.string().min(1, "Store ID is required"),
@@ -342,6 +343,21 @@ export async function POST(request: NextRequest) {
 
       return createdProduct;
     });
+
+    // Revalidate SSG pages
+    try {
+      // Revalidate product detail page
+      revalidatePath(`/product/${product.slug}`);
+      // Revalidate store page where product belongs
+      revalidatePath(`/store/${store.slug}`);
+      // Revalidate stores list (product count may change)
+      revalidatePath('/stores');
+      // Revalidate home page (featured products)
+      revalidatePath('/');
+    } catch (revalidationError) {
+      console.error('Revalidation error:', revalidationError);
+      // Don't fail the request if revalidation fails
+    }
 
     return NextResponse.json(product, { status: 201 });
   } catch (error) {

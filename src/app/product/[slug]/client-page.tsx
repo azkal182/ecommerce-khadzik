@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
@@ -10,6 +10,7 @@ import { ArrowLeft, ShoppingCart, Plus, Minus, Check } from "lucide-react";
 import { Header } from "@/components/layout/header";
 import MarkdownRenderer from "@/components/ui/markdown-renderer";
 import { useCart } from "@/contexts/cart-context";
+import { applyStoreTheme } from "@/lib/theme";
 import type { Product, Store, ProductImage, Category, VariantOptionType, Variant } from "@prisma/client";
 
 interface ProductDetailClientProps {
@@ -31,11 +32,13 @@ interface ProductDetailClientProps {
   relatedProducts: (Product & {
     images: ProductImage[];
   })[];
+  storeSlug: string;
 }
 
 export default function ProductDetailClient({
   product,
   relatedProducts,
+  storeSlug,
 }: ProductDetailClientProps) {
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const [selectedOptions, setSelectedOptions] = useState<Record<string, string>>({});
@@ -43,9 +46,9 @@ export default function ProductDetailClient({
   const { addToCart, isInCart } = useCart();
 
   // Apply store theme
-  useState(() => {
-    document.body.setAttribute("data-store", product.store.slug);
-  });
+  useEffect(() => {
+    applyStoreTheme(storeSlug);
+  }, [storeSlug]);
 
   // Find variant based on selected options
   const selectedVariant = product.variants.find(variant => {

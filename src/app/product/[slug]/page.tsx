@@ -1,17 +1,21 @@
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
-import Image from "next/image";
-import Link from "next/link";
 import { prisma } from "@/lib/prisma";
-import { applyStoreTheme } from "@/lib/theme";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { ArrowLeft, ShoppingCart, Plus, Minus, Check } from "lucide-react";
 import ProductDetailClient from "./client-page";
 
 interface ProductPageProps {
   params: Promise<{ slug: string }>;
+}
+
+export async function generateStaticParams() {
+  const products = await prisma.product.findMany({
+    where: { status: "ACTIVE" },
+    select: { slug: true },
+  });
+
+  return products.map((product) => ({
+    slug: product.slug,
+  }));
 }
 
 export async function generateMetadata(
@@ -20,8 +24,14 @@ export async function generateMetadata(
   const { slug } = await params;
   const product = await prisma.product.findUnique({
     where: { slug },
-    include: {
-      store: true,
+    select: {
+      name: true,
+      description: true,
+      store: {
+        select: {
+          name: true,
+        },
+      },
     },
   });
 
@@ -69,9 +79,6 @@ export default async function ProductPage({ params }: ProductPageProps) {
     notFound();
   }
 
-  // Apply store theme
-  applyStoreTheme(product.store.slug);
-
   // Get related products from the same store
   const relatedProducts = await prisma.product.findMany({
     where: {
@@ -93,6 +100,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
     <ProductDetailClient
       product={product}
       relatedProducts={relatedProducts}
+      storeSlug={product.store.slug}
     />
   );
 }

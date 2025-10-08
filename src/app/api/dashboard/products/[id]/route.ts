@@ -4,6 +4,7 @@ import { prisma } from "@/lib/prisma";
 import { supabase } from "@/lib/supabase";
 import { generateUniqueSlug } from "@/lib/slug";
 import { z } from "zod";
+import { revalidatePath } from "next/cache";
 
 export async function GET(
   request: NextRequest,
@@ -157,13 +158,18 @@ export async function PUT(
     // Validate request body
     const validatedData = updateProductSchema.parse(body);
 
-    // Check if product exists
+    // Check if product exists and get store info
     const existingProduct = await prisma.product.findUnique({
       where: { id },
       include: {
         images: true,
         categories: true,
         variants: true,
+        store: {
+          select: {
+            slug: true,
+          },
+        },
       },
     });
 
@@ -422,6 +428,26 @@ export async function PUT(
       return product;
     });
 
+    // Revalidate SSG pages
+    try {
+      // Revalidate both old and new product slugs if slug changed
+      revalidatePath(`/product/${existingProduct.slug}`);
+      if (existingProduct.slug !== slug) {
+        revalidatePath(`/product/${slug}`);
+      }
+      // Revalidate store page (both old and new stores if store changed)
+      revalidatePath(`/store/${existingProduct.store.slug}`);
+      if (store.slug !== existingProduct.store.slug) {
+        revalidatePath(`/store/${store.slug}`);
+      }
+      // Revalidate stores list and home page
+      revalidatePath('/stores');
+      revalidatePath('/');
+    } catch (revalidationError) {
+      console.error('Revalidation error:', revalidationError);
+      // Don't fail the request if revalidation fails
+    }
+
     return NextResponse.json(updatedProduct);
   } catch (error) {
     console.error("Error updating product:", error);
@@ -453,6 +479,11 @@ export async function DELETE(
       where: { id },
       include: {
         images: true,
+        store: {
+          select: {
+            slug: true,
+          },
+        },
       },
     });
 
@@ -483,6 +514,20 @@ export async function DELETE(
         where: { id },
       });
     });
+
+    // Revalidate SSG pages
+    try {
+      // Revalidate product page
+      revalidatePath(`/product/${existingProduct.slug}`);
+      // Revalidate store page
+      revalidatePath(`/store/${existingProduct.store.slug}`);
+      // Revalidate stores list and home page
+      revalidatePath('/stores');
+      revalidatePath('/');
+    } catch (revalidationError) {
+      console.error('Revalidation error:', revalidationError);
+      // Don't fail the request if revalidation fails
+    }
 
     // Optionally: Delete images from Supabase (this would require tracking which images are in Supabase)
     // For now, we'll keep the images in Supabase even after product deletion

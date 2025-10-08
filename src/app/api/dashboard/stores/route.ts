@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { requireAuth } from "@/lib/rbac";
 import { prisma } from "@/lib/prisma";
 import { z } from "zod";
+import { revalidatePath } from "next/cache";
 
 const createStoreSchema = z.object({
   name: z.string().min(1, "Store name is required"),
@@ -69,6 +70,19 @@ export async function POST(request: NextRequest) {
     const store = await prisma.store.create({
       data: validatedData,
     });
+
+    // Revalidate SSG pages
+    try {
+      // Revalidate store page
+      revalidatePath(`/store/${store.slug}`);
+      // Revalidate stores list
+      revalidatePath('/stores');
+      // Revalidate home page (featured stores)
+      revalidatePath('/');
+    } catch (revalidationError) {
+      console.error('Revalidation error:', revalidationError);
+      // Don't fail the request if revalidation fails
+    }
 
     return NextResponse.json(store, { status: 201 });
   } catch (error) {

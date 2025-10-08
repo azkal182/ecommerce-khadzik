@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { requireAuth } from "@/lib/rbac";
 import { prisma } from "@/lib/prisma";
 import { z } from "zod";
+import { revalidatePath } from "next/cache";
 
 const updateStoreSchema = z.object({
   name: z.string().min(1, "Store name is required"),
@@ -99,6 +100,22 @@ export async function PUT(
       data: validatedData,
     });
 
+    // Revalidate SSG pages
+    try {
+      // Revalidate both old and new store slugs if slug changed
+      revalidatePath(`/store/${existingStore.slug}`);
+      if (existingStore.slug !== store.slug) {
+        revalidatePath(`/store/${store.slug}`);
+      }
+      // Revalidate stores list
+      revalidatePath('/stores');
+      // Revalidate home page (featured stores)
+      revalidatePath('/');
+    } catch (revalidationError) {
+      console.error('Revalidation error:', revalidationError);
+      // Don't fail the request if revalidation fails
+    }
+
     return NextResponse.json(store);
   } catch (error) {
     console.error("Error updating store:", error);
@@ -156,6 +173,19 @@ export async function DELETE(
     await prisma.store.delete({
       where: { id },
     });
+
+    // Revalidate SSG pages
+    try {
+      // Revalidate store page
+      revalidatePath(`/store/${existingStore.slug}`);
+      // Revalidate stores list
+      revalidatePath('/stores');
+      // Revalidate home page (featured stores)
+      revalidatePath('/');
+    } catch (revalidationError) {
+      console.error('Revalidation error:', revalidationError);
+      // Don't fail the request if revalidation fails
+    }
 
     return NextResponse.json(
       { message: "Store deleted successfully" },

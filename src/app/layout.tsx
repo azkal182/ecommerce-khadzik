@@ -17,10 +17,11 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "Dual Store - Indonesia's Premium Shopping Destination",
-  description: "Discover amazing products from our curated stores. Fashion, watches, and more - all in one place.",
-  colorScheme: 'light',
+  description:
+    "Discover amazing products from our curated stores. Fashion, watches, and more - all in one place.",
+  //   colorScheme: 'light',
   other: {
-    'color-scheme': 'light only',
+    "color-scheme": "light only",
   },
 };
 
@@ -40,9 +41,7 @@ export default function RootLayout({
         suppressHydrationWarning
       >
         <SessionProviderWrapper>
-          <CartProvider>
-            {children}
-          </CartProvider>
+          <CartProvider>{children}</CartProvider>
         </SessionProviderWrapper>
       </body>
     </html>

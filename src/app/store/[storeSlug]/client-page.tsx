@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
@@ -18,6 +18,7 @@ import { Search, Filter, Grid, List, ShoppingCart } from "lucide-react";
 import { Header } from "@/components/layout/header";
 import MarkdownRenderer from "@/components/ui/markdown-renderer";
 import { useCart } from "@/contexts/cart-context";
+import { applyStoreTheme } from "@/lib/theme";
 import type { Store, Product, Category } from "@prisma/client";
 
 interface StoreClientPageProps {
@@ -46,50 +47,96 @@ interface StoreClientPageProps {
     }[];
   })[];
   categories: Category[];
-  totalProducts: number;
-  currentPage: number;
-  totalPages: number;
-  currentFilters: {
-    category: string;
-    sortBy: string;
-    search: string;
-    minPrice: number;
-    maxPrice: number;
-  };
+  storeSlug: string;
 }
 
-export default function StoreClientPage({
+function StorePageContent({
   store,
   products,
   categories,
-  totalProducts,
-  currentPage,
-  totalPages,
-  currentFilters,
+  storeSlug,
 }: StoreClientPageProps) {
   const searchParams = useSearchParams();
   const router = useRouter();
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
-  const [searchTerm, setSearchTerm] = useState(currentFilters.search || "");
+  const [searchTerm, setSearchTerm] = useState("");
   const [showFilters, setShowFilters] = useState(false);
 
+  // Client-side filtering and pagination state
+  const [currentPage, setCurrentPage] = useState(1);
+  const [filteredProducts, setFilteredProducts] = useState(products);
+  const productsPerPage = 12;
+  const totalPages = Math.ceil(filteredProducts.length / productsPerPage);
+  const totalProducts = filteredProducts.length;
+
+  // Filter state
+  const [currentFilters, setCurrentFilters] = useState({
+    category: "",
+    sortBy: "newest",
+    search: "",
+    minPrice: 0,
+    maxPrice: 10000000,
+  });
+
   useEffect(() => {
-    document.body.setAttribute("data-store", store.slug);
-  }, [store.slug]);
+    applyStoreTheme(storeSlug);
+  }, [storeSlug]);
 
-  const updateFilters = (newFilters: Record<string, string>) => {
-    const params = new URLSearchParams(searchParams.toString());
+  // Client-side filtering logic
+  useEffect(() => {
+    let filtered = [...products];
 
-    Object.entries(newFilters).forEach(([key, value]) => {
-      if (value && value !== "") {
-        params.set(key, value);
-      } else {
-        params.delete(key);
-      }
-    });
+    // Filter by category
+    if (currentFilters.category) {
+      filtered = filtered.filter(product =>
+        product.categories.some(cat => cat.category.slug === currentFilters.category)
+      );
+    }
 
-    params.delete("page"); // Reset to page 1 when filters change
-    router.push(`?${params.toString()}`);
+    // Filter by search term
+    if (currentFilters.search) {
+      const searchLower = currentFilters.search.toLowerCase();
+      filtered = filtered.filter(product =>
+        product.name.toLowerCase().includes(searchLower) ||
+        (product.description && product.description.toLowerCase().includes(searchLower))
+      );
+    }
+
+    // Filter by price range
+    filtered = filtered.filter(product =>
+      product.basePrice >= currentFilters.minPrice &&
+      product.basePrice <= currentFilters.maxPrice
+    );
+
+    // Sort products
+    switch (currentFilters.sortBy) {
+      case "price-asc":
+        filtered.sort((a, b) => a.basePrice - b.basePrice);
+        break;
+      case "price-desc":
+        filtered.sort((a, b) => b.basePrice - a.basePrice);
+        break;
+      case "name-asc":
+        filtered.sort((a, b) => a.name.localeCompare(b.name));
+        break;
+      case "name-desc":
+        filtered.sort((a, b) => b.name.localeCompare(a.name));
+        break;
+      case "newest":
+      default:
+        filtered.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+        break;
+    }
+
+    setFilteredProducts(filtered);
+    setCurrentPage(1); // Reset to first page when filters change
+  }, [products, currentFilters]);
+
+  const updateFilters = (newFilters: Record<string, string | number>) => {
+    setCurrentFilters(prev => ({
+      ...prev,
+      ...newFilters,
+    }));
   };
 
   const handleSearch = (e: React.FormEvent) => {
@@ -111,9 +158,18 @@ export default function StoreClientPage({
   };
 
   const getMaxPrice = () => {
-    if (products.length === 0) return 1000000;
+    if (products.length === 0) return 10000000;
     return Math.max(...products.map((p) => p.basePrice));
   };
+
+  // Get paginated products for display
+  const getPaginatedProducts = () => {
+    const startIndex = (currentPage - 1) * productsPerPage;
+    const endIndex = startIndex + productsPerPage;
+    return filteredProducts.slice(startIndex, endIndex);
+  };
+
+  const paginatedProducts = getPaginatedProducts();
 
   console.log(store);
 
@@ -271,17 +327,17 @@ export default function StoreClientPage({
                     <Input
                       type="number"
                       placeholder="Min"
-                      value={currentFilters.minPrice || ""}
+                      value={currentFilters.minPrice === 0 ? "" : currentFilters.minPrice}
                       onChange={(e) =>
-                        updateFilters({ minPrice: e.target.value })
+                        updateFilters({ minPrice: Number(e.target.value) || 0 })
                       }
                     />
                     <Input
                       type="number"
                       placeholder="Max"
-                      value={currentFilters.maxPrice || ""}
+                      value={currentFilters.maxPrice === 10000000 ? "" : currentFilters.maxPrice}
                       onChange={(e) =>
-                        updateFilters({ maxPrice: e.target.value })
+                        updateFilters({ maxPrice: Number(e.target.value) || 10000000 })
                       }
                     />
                   </div>
@@ -293,7 +349,13 @@ export default function StoreClientPage({
                   className="w-full"
                   onClick={() => {
                     setSearchTerm("");
-                    router.push("?");
+                    setCurrentFilters({
+                      category: "",
+                      sortBy: "newest",
+                      search: "",
+                      minPrice: 0,
+                      maxPrice: 10000000,
+                    });
                   }}
                 >
                   Clear Filters
@@ -304,7 +366,7 @@ export default function StoreClientPage({
 
           {/* Products Grid */}
           <div className="flex-1 order-1 lg:order-2">
-            {products.length === 0 ? (
+            {filteredProducts.length === 0 ? (
               <div className="text-center py-8 sm:py-12">
                 <div className="text-gray-400 text-4xl sm:text-6xl mb-4">📦</div>
                 <h3 className="text-base sm:text-lg font-medium text-gray-900 mb-2">
@@ -319,7 +381,7 @@ export default function StoreClientPage({
                 {/* Results Count */}
                 <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 sm:mb-6 space-y-2 sm:space-y-0">
                   <p className="text-sm sm:text-base text-gray-600">
-                    Showing {products.length} of {totalProducts} products
+                    Showing {paginatedProducts.length} of {totalProducts} products
                   </p>
                   <Button
                     variant="outline"
@@ -340,7 +402,7 @@ export default function StoreClientPage({
                       : "space-y-4"
                   }
                 >
-                  {products.map((product) => (
+                  {paginatedProducts.map((product) => (
                     <ProductCard
                       key={product.id}
                       product={product}
@@ -362,13 +424,7 @@ export default function StoreClientPage({
                               page === currentPage ? "default" : "outline"
                             }
                             size="sm"
-                            onClick={() => {
-                              const params = new URLSearchParams(
-                                searchParams.toString()
-                              );
-                              params.set("page", page.toString());
-                              router.push(`?${params.toString()}`);
-                            }}
+                            onClick={() => setCurrentPage(page)}
                             className="text-xs sm:text-sm px-2 sm:px-3"
                           >
                             {page}
@@ -384,6 +440,28 @@ export default function StoreClientPage({
         </div>
       </div>
     </div>
+  );
+}
+
+export default function StoreClientPage(props: StoreClientPageProps) {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-gray-50">
+        <div className="animate-pulse">
+          <div className="h-16 bg-gray-200 mb-8"></div>
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="h-48 bg-gray-200 rounded mb-8"></div>
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {[...Array(6)].map((_, i) => (
+                <div key={i} className="h-96 bg-gray-200 rounded"></div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    }>
+      <StorePageContent {...props} />
+    </Suspense>
   );
 }
 
