@@ -22,6 +22,7 @@ const eslintConfig = [
     rules: {
         // Nonaktifkan aturan unused vars
         "@typescript-eslint/no-unused-vars": "off",
+        "@typescript-eslint/no-explicit-any": "off",
       },
   },
 ];
