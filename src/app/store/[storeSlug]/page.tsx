@@ -77,9 +77,22 @@ export default async function StorePage({ params }: StorePageProps) {
     orderBy: { name: "asc" },
   });
 
+  // Transform store to match expected type
+  const transformedStore = {
+    ...store,
+    theme:
+      (store.theme as {
+        primary: string;
+        secondary: string;
+        bg: string;
+        fg: string;
+        accent: string;
+      } | null) || null,
+  };
+
   return (
     <StoreClientPage
-      store={store}
+      store={transformedStore}
       products={store.products}
       categories={categories}
       storeSlug={storeSlug}

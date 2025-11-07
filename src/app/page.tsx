@@ -78,40 +78,27 @@ async function getHomeData() {
   const totalCategories = await prisma.category.count();
 
   return {
-    stores: stores.map(
-      (store: {
-        id: string;
-        name: string;
-        slug: string;
-        description: string | null;
-        theme: {
-          primary: string;
-          secondary: string;
-          bg: string;
-          fg: string;
-          accent: string;
-        } | null;
-        _count: {
-          products: number;
-        };
-      }) => ({
+    stores: stores.map((store) => {
+      const theme = store.theme as {
+        primary: string;
+        secondary: string;
+        bg: string;
+        fg: string;
+        accent: string;
+      } | null;
+
+      return {
         ...store,
         description: store.description || "",
-        theme: (store.theme as {
-          primary: string;
-          secondary: string;
-          bg: string;
-          fg: string;
-          accent: string;
-        }) || {
+        theme: theme || {
           primary: "#3b82f6",
           secondary: "#1d4ed8",
           bg: "#ffffff",
           fg: "#111827",
           accent: "#f59e0b",
         },
-      })
-    ),
+      };
+    }),
     products: products.map(
       (product: {
         id: string;
