@@ -19,9 +19,9 @@ import {
   ShoppingCart,
   Users,
   Store,
-  Calendar,
+  //   Calendar,
   Download,
-  Eye
+  Eye,
 } from "lucide-react";
 
 interface AnalyticsData {
@@ -69,40 +69,52 @@ export default function AnalyticsPage() {
     const fetchAnalytics = async () => {
       try {
         // Simulate API call
-        await new Promise(resolve => setTimeout(resolve, 1000));
+        await new Promise((resolve) => setTimeout(resolve, 1000));
 
         const mockData: AnalyticsData = {
           revenue: {
             current: 8940000,
             previous: 7800000,
-            change: 14.6
+            change: 14.6,
           },
           orders: {
             current: 47,
             previous: 41,
-            change: 14.6
+            change: 14.6,
           },
           customers: {
             current: 23,
             previous: 19,
-            change: 21.1
+            change: 21.1,
           },
           conversionRate: {
             current: 3.2,
             previous: 2.8,
-            change: 14.3
+            change: 14.3,
           },
           topProducts: [
             { id: "1", name: "Classic T-Shirt", sales: 15, revenue: 2250000 },
             { id: "2", name: "Analog Watch", sales: 12, revenue: 14400000 },
             { id: "3", name: "Denim Jeans", sales: 8, revenue: 1600000 },
             { id: "4", name: "Smart Watch", sales: 7, revenue: 8750000 },
-            { id: "5", name: "Casual Shirt", sales: 5, revenue: 750000 }
+            { id: "5", name: "Casual Shirt", sales: 5, revenue: 750000 },
           ],
           storePerformance: [
-            { id: "1", name: "Fashion Hub", revenue: 4600000, orders: 24, products: 4 },
-            { id: "2", name: "Time Pieces", revenue: 4340000, orders: 23, products: 4 }
-          ]
+            {
+              id: "1",
+              name: "Fashion Hub",
+              revenue: 4600000,
+              orders: 24,
+              products: 4,
+            },
+            {
+              id: "2",
+              name: "Time Pieces",
+              revenue: 4340000,
+              orders: 23,
+              products: 4,
+            },
+          ],
         };
 
         setData(mockData);
@@ -150,7 +162,7 @@ export default function AnalyticsPage() {
       changeType: data.revenue.change > 0 ? "positive" : "negative",
       icon: DollarSign,
       color: "text-green-600",
-      bgColor: "bg-green-50"
+      bgColor: "bg-green-50",
     },
     {
       title: "Orders",
@@ -159,7 +171,7 @@ export default function AnalyticsPage() {
       changeType: data.orders.change > 0 ? "positive" : "negative",
       icon: ShoppingCart,
       color: "text-blue-600",
-      bgColor: "bg-blue-50"
+      bgColor: "bg-blue-50",
     },
     {
       title: "Customers",
@@ -168,7 +180,7 @@ export default function AnalyticsPage() {
       changeType: data.customers.change > 0 ? "positive" : "negative",
       icon: Users,
       color: "text-purple-600",
-      bgColor: "bg-purple-50"
+      bgColor: "bg-purple-50",
     },
     {
       title: "Conversion Rate",
@@ -177,8 +189,8 @@ export default function AnalyticsPage() {
       changeType: data.conversionRate.change > 0 ? "positive" : "negative",
       icon: BarChart3,
       color: "text-orange-600",
-      bgColor: "bg-orange-50"
-    }
+      bgColor: "bg-orange-50",
+    },
   ];
 
   return (
@@ -219,7 +231,9 @@ export default function AnalyticsPage() {
               <CardContent className="p-6">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm font-medium text-gray-600">{metric.title}</p>
+                    <p className="text-sm font-medium text-gray-600">
+                      {metric.title}
+                    </p>
                     <p className="text-2xl font-bold text-gray-900 mt-1">
                       {metric.value}
                     </p>
@@ -231,7 +245,9 @@ export default function AnalyticsPage() {
                       )}
                       <span
                         className={
-                          metric.changeType === "positive" ? "text-green-600" : "text-red-600"
+                          metric.changeType === "positive"
+                            ? "text-green-600"
+                            : "text-red-600"
                         }
                       >
                         {Math.abs(metric.change)}% from previous period
@@ -260,18 +276,27 @@ export default function AnalyticsPage() {
           <CardContent>
             <div className="space-y-4">
               {data.topProducts.map((product, index) => (
-                <div key={product.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                <div
+                  key={product.id}
+                  className="flex items-center justify-between p-3 bg-gray-50 rounded-lg"
+                >
                   <div className="flex items-center space-x-3">
                     <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-500 rounded-lg flex items-center justify-center text-white font-bold text-sm">
                       {index + 1}
                     </div>
                     <div>
-                      <p className="font-medium text-gray-900">{product.name}</p>
-                      <p className="text-sm text-gray-500">{product.sales} sales</p>
+                      <p className="font-medium text-gray-900">
+                        {product.name}
+                      </p>
+                      <p className="text-sm text-gray-500">
+                        {product.sales} sales
+                      </p>
                     </div>
                   </div>
                   <div className="text-right">
-                    <p className="font-bold text-green-600">{formatPrice(product.revenue)}</p>
+                    <p className="font-bold text-green-600">
+                      {formatPrice(product.revenue)}
+                    </p>
                   </div>
                 </div>
               ))}
@@ -289,10 +314,12 @@ export default function AnalyticsPage() {
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
-              {data.storePerformance.map((store, index) => (
+              {data.storePerformance.map((store) => (
                 <div key={store.id} className="p-4 bg-gray-50 rounded-lg">
                   <div className="flex items-center justify-between mb-3">
-                    <h4 className="font-semibold text-gray-900">{store.name}</h4>
+                    <h4 className="font-semibold text-gray-900">
+                      {store.name}
+                    </h4>
                     <Badge variant="outline" className="text-green-600">
                       Active
                     </Badge>
@@ -300,7 +327,9 @@ export default function AnalyticsPage() {
                   <div className="grid grid-cols-3 gap-4 text-sm">
                     <div>
                       <p className="text-gray-500">Revenue</p>
-                      <p className="font-bold text-green-600">{formatPrice(store.revenue)}</p>
+                      <p className="font-bold text-green-600">
+                        {formatPrice(store.revenue)}
+                      </p>
                     </div>
                     <div>
                       <p className="text-gray-500">Orders</p>
@@ -334,8 +363,12 @@ export default function AnalyticsPage() {
               <p className="text-sm text-blue-700">Most orders placed</p>
             </div>
             <div className="p-4 bg-green-50 rounded-lg">
-              <h4 className="font-medium text-green-900 mb-2">Avg Order Value</h4>
-              <p className="text-2xl font-bold text-green-600">{formatPrice(190000)}</p>
+              <h4 className="font-medium text-green-900 mb-2">
+                Avg Order Value
+              </h4>
+              <p className="text-2xl font-bold text-green-600">
+                {formatPrice(190000)}
+              </p>
               <p className="text-sm text-green-700">Per transaction</p>
             </div>
             <div className="p-4 bg-purple-50 rounded-lg">

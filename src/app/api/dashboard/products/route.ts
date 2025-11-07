@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/lib/auth";
+// import { getServerSession } from "next-auth";
+// import { authOptions } from "@/lib/auth";
 import { requireAuth } from "@/lib/rbac";
 import { prisma } from "@/lib/prisma";
 import { supabase } from "@/lib/supabase";
@@ -14,26 +14,47 @@ const createProductSchema = z.object({
   description: z.string().min(1, "Description is required"),
   basePrice: z.number().min(0, "Base price must be positive"),
   status: z.enum(["DRAFT", "ACTIVE", "ARCHIVED"]).default("ACTIVE"),
-  images: z.array(z.object({
-    url: z.string(),
-    alt: z.string(),
-    order: z.number(),
-  })).optional().default([]),
+  images: z
+    .array(
+      z.object({
+        url: z.string(),
+        alt: z.string(),
+        order: z.number(),
+      })
+    )
+    .optional()
+    .default([]),
   categories: z.array(z.string()).min(1, "At least one category is required"),
-  optionTypes: z.array(z.object({
-    id: z.string(),
-    name: z.string().min(1, "Option type name is required"),
-    values: z.array(z.string()).min(1, "At least one option value is required"),
-  })).optional().default([]),
-  variants: z.array(z.object({
-    sku: z.string().optional(),
-    priceAbsolute: z.number().min(0, "Variant price is required"),
-    stock: z.number().min(0, "Stock cannot be negative"),
-    optionValues: z.array(z.object({
-      typeName: z.string(),
-      value: z.string(),
-    })).optional().default([]),
-  })).optional(),
+  optionTypes: z
+    .array(
+      z.object({
+        id: z.string(),
+        name: z.string().min(1, "Option type name is required"),
+        values: z
+          .array(z.string())
+          .min(1, "At least one option value is required"),
+      })
+    )
+    .optional()
+    .default([]),
+  variants: z
+    .array(
+      z.object({
+        sku: z.string().optional(),
+        priceAbsolute: z.number().min(0, "Variant price is required"),
+        stock: z.number().min(0, "Stock cannot be negative"),
+        optionValues: z
+          .array(
+            z.object({
+              typeName: z.string(),
+              value: z.string(),
+            })
+          )
+          .optional()
+          .default([]),
+      })
+    )
+    .optional(),
 });
 
 export async function GET(request: NextRequest) {
@@ -142,21 +163,21 @@ export async function POST(request: NextRequest) {
     });
 
     if (!store) {
-      return NextResponse.json(
-        { error: "Store not found" },
-        { status: 404 }
-      );
+      return NextResponse.json({ error: "Store not found" }, { status: 404 });
     }
 
     // Check if any variant SKU already exists (only check provided SKUs)
-    const providedSkus = validatedData.variants?.map(v => v.sku).filter((sku): sku is string => Boolean(sku)) || [];
+    const providedSkus =
+      validatedData.variants
+        ?.map((v) => v.sku)
+        .filter((sku): sku is string => Boolean(sku)) || [];
     if (providedSkus.length > 0) {
       const existingVariantSkus = await prisma.variant.findMany({
         where: {
           sku: {
-            in: providedSkus
-          }
-        }
+            in: providedSkus,
+          },
+        },
       });
 
       if (existingVariantSkus.length > 0) {
@@ -168,7 +189,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Generate unique slug
-    const slug = await generateUniqueSlug(validatedData.name, 'product');
+    const slug = await generateUniqueSlug(validatedData.name, "product");
 
     // Process images - upload to Supabase if they're base64
     const processedImages = await Promise.all(
@@ -176,12 +197,12 @@ export async function POST(request: NextRequest) {
         let url = image.url;
 
         // Check if image is base64
-        if (image.url.startsWith('data:image/')) {
+        if (image.url.startsWith("data:image/")) {
           try {
             // Convert base64 to file
-            const base64Data = image.url.split(',')[1];
-            const mimeType = image.url.split(':')[1].split(';')[0];
-            const fileExt = mimeType.split('/')[1];
+            const base64Data = image.url.split(",")[1];
+            const mimeType = image.url.split(":")[1].split(";")[0];
+            const fileExt = mimeType.split("/")[1];
             const fileName = `product-${Date.now()}-${index}.${fileExt}`;
 
             // Convert base64 to Blob
@@ -196,10 +217,10 @@ export async function POST(request: NextRequest) {
 
             // Upload to Supabase
             const uploadResult = await supabase.storage
-              .from('product-images')
+              .from("product-images")
               .upload(`products/${fileName}`, file, {
-                cacheControl: '3600',
-                upsert: false
+                cacheControl: "3600",
+                upsert: false,
               });
 
             if (uploadResult.error) {
@@ -207,8 +228,10 @@ export async function POST(request: NextRequest) {
             }
 
             // Get public URL
-            const { data: { publicUrl } } = supabase.storage
-              .from('product-images')
+            const {
+              data: { publicUrl },
+            } = supabase.storage
+              .from("product-images")
               .getPublicUrl(uploadResult.data.path);
 
             url = publicUrl;
@@ -227,7 +250,7 @@ export async function POST(request: NextRequest) {
     );
 
     // Create product within a transaction
-    const product = await prisma.$transaction(async (tx) => {
+    const product = await prisma.$transaction(async (tx: any) => {
       // First create the product with basic data
       const createdProduct = await tx.product.create({
         data: {
@@ -273,7 +296,7 @@ export async function POST(request: NextRequest) {
 
           // Create option values for this type
           const createdValues = await Promise.all(
-            optionType.values.map(value =>
+            optionType.values.map((value) =>
               tx.variantOptionValue.create({
                 data: {
                   typeId: createdType.id,
@@ -291,14 +314,17 @@ export async function POST(request: NextRequest) {
       }
 
       // Handle variants - create default variant if none provided
-      const variantsToCreate = validatedData.variants && validatedData.variants.length > 0
-        ? validatedData.variants
-        : [{
-            sku: null,
-            priceAbsolute: validatedData.basePrice,
-            stock: 0, // Default stock
-            optionValues: []
-          }];
+      const variantsToCreate =
+        validatedData.variants && validatedData.variants.length > 0
+          ? validatedData.variants
+          : [
+              {
+                sku: null,
+                priceAbsolute: validatedData.basePrice,
+                stock: 0, // Default stock
+                optionValues: [],
+              },
+            ];
 
       const createdVariants = await Promise.all(
         variantsToCreate.map((variant) =>
@@ -314,7 +340,11 @@ export async function POST(request: NextRequest) {
       );
 
       // Connect variants to option values
-      if (createdOptionTypes.length > 0 && validatedData.variants && validatedData.variants.length > 0) {
+      if (
+        createdOptionTypes.length > 0 &&
+        validatedData.variants &&
+        validatedData.variants.length > 0
+      ) {
         for (let i = 0; i < validatedData.variants.length; i++) {
           const variant = validatedData.variants[i];
           const createdVariant = createdVariants[i];
@@ -322,12 +352,12 @@ export async function POST(request: NextRequest) {
           // Find and connect option values
           for (const optionValue of variant.optionValues) {
             const optionType = createdOptionTypes.find(
-              type => type.name === optionValue.typeName
+              (type) => type.name === optionValue.typeName
             );
 
             if (optionType) {
               const value = optionType.values.find(
-                v => v.name === optionValue.value
+                (v: any) => v.name === optionValue.value
               );
 
               if (value) {
@@ -351,11 +381,11 @@ export async function POST(request: NextRequest) {
       // Revalidate store page where product belongs
       revalidatePath(`/store/${store.slug}`);
       // Revalidate stores list (product count may change)
-      revalidatePath('/stores');
+      revalidatePath("/stores");
       // Revalidate home page (featured products)
-      revalidatePath('/');
+      revalidatePath("/");
     } catch (revalidationError) {
-      console.error('Revalidation error:', revalidationError);
+      console.error("Revalidation error:", revalidationError);
       // Don't fail the request if revalidation fails
     }
 

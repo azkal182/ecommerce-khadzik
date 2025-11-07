@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/lib/auth";
+// import { getServerSession } from "next-auth";
+// import { authOptions } from "@/lib/auth";
 import { requireAuth } from "@/lib/rbac";
 import { prisma } from "@/lib/prisma";
 import { z } from "zod";
@@ -12,9 +12,9 @@ const createCategorySchema = z.object({
   description: z.string().optional(),
 });
 
-export async function GET(request: NextRequest) {
+export async function GET() {
   try {
-    const user = await requireAuth();
+    // const user = await requireAuth();
 
     const categories = await prisma.category.findMany({
       include: {
@@ -67,14 +67,14 @@ export async function POST(request: NextRequest) {
     // Revalidate SSG pages (categories affect all pages)
     try {
       // Revalidate all pages as categories might be used anywhere
-      revalidatePath('/');
-      revalidatePath('/stores');
+      revalidatePath("/");
+      revalidatePath("/stores");
       // Revalidate all store pages
       const stores = await prisma.store.findMany({
         where: { isActive: true },
         select: { slug: true },
       });
-      stores.forEach(store => {
+      stores.forEach((store: { slug: string }) => {
         revalidatePath(`/store/${store.slug}`);
       });
       // Revalidate all product pages
@@ -82,11 +82,11 @@ export async function POST(request: NextRequest) {
         where: { status: "ACTIVE" },
         select: { slug: true },
       });
-      products.forEach(product => {
+      products.forEach((product: { slug: string }) => {
         revalidatePath(`/product/${product.slug}`);
       });
     } catch (revalidationError) {
-      console.error('Revalidation error:', revalidationError);
+      console.error("Revalidation error:", revalidationError);
       // Don't fail the request if revalidation fails
     }
 

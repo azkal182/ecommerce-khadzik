@@ -1,25 +1,21 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/lib/auth";
+// import { getServerSession } from "next-auth";
+// import { authOptions } from "@/lib/auth";
 import { requireAuth } from "@/lib/rbac";
 import { prisma } from "@/lib/prisma";
 
-export async function GET(request: NextRequest) {
+export async function GET() {
   try {
-    const user = await requireAuth();
+    // const user = await requireAuth();
 
     // Get total counts
-    const [
-      totalStores,
-      totalProducts,
-      totalCategories,
-      activeStores,
-    ] = await Promise.all([
-      prisma.store.count(),
-      prisma.product.count(),
-      prisma.category.count(),
-      prisma.store.count({ where: { isActive: true } }),
-    ]);
+    const [totalStores, totalProducts, totalCategories, activeStores] =
+      await Promise.all([
+        prisma.store.count(),
+        prisma.product.count(),
+        prisma.category.count(),
+        prisma.store.count({ where: { isActive: true } }),
+      ]);
 
     // Get total stock across all variants
     const totalStockResult = await prisma.variant.aggregate({

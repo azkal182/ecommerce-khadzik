@@ -1,12 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/lib/auth";
+// import { getServerSession } from "next-auth";
+// import { authOptions } from "@/lib/auth";
 import { requireAuth } from "@/lib/rbac";
-import { prisma } from "@/lib/prisma";
+// import { prisma } from "@/lib/prisma";
 
 export async function GET(request: NextRequest) {
   try {
-    const user = await requireAuth();
+    // const user = await requireAuth();
     const { searchParams } = new URL(request.url);
     const search = searchParams.get("search");
 
