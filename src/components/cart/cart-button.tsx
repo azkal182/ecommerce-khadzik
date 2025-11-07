@@ -18,7 +18,7 @@ export function CartButton({ onClick }: CartButtonProps) {
   return (
     <>
       <Button
-        variant="outline"
+        variant="ghost"
         size="sm"
         onClick={() => {
           if (onClick) {
@@ -27,13 +27,13 @@ export function CartButton({ onClick }: CartButtonProps) {
             setIsOpen(true);
           }
         }}
-        className="relative"
+        className="relative h-9 w-9 p-0 hover:bg-gray-100 transition-all duration-200"
       >
-        <ShoppingCart className="h-5 w-5" />
+        <ShoppingCart className="h-5 w-5 text-gray-700" />
         {cart.totalItems > 0 && (
           <Badge
             variant="destructive"
-            className="absolute -top-2 -right-2 h-5 w-5 rounded-full p-0 flex items-center justify-center text-xs"
+            className="absolute -top-1 -right-1 h-5 w-5 rounded-full p-0 flex items-center justify-center text-xs font-semibold shadow-lg animate-pulse"
           >
             {cart.totalItems > 99 ? "99+" : cart.totalItems}
           </Badge>

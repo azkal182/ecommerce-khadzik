@@ -13,7 +13,7 @@ export async function generateStaticParams() {
     select: { slug: true },
   });
 
-  return stores.map((store) => ({
+  return stores.map((store: { slug: string }) => ({
     storeSlug: store.slug,
   }));
 }
@@ -41,9 +41,7 @@ export async function generateMetadata({
   };
 }
 
-export default async function StorePage({
-  params,
-}: StorePageProps) {
+export default async function StorePage({ params }: StorePageProps) {
   const { storeSlug } = await params;
 
   // Get store information

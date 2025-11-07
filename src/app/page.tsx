@@ -10,13 +10,14 @@ import {
   Store as StoreIcon,
   MessageCircle,
   Package,
-  TrendingUp
+  TrendingUp,
 } from "lucide-react";
 import HomeClient from "./client-page";
 
 export const metadata: Metadata = {
   title: "Dual Store - Indonesia's Premium Shopping Destination",
-  description: "Discover amazing products from our curated stores. Fashion, watches, and more - all in one place.",
+  description:
+    "Discover amazing products from our curated stores. Fashion, watches, and more - all in one place.",
 };
 
 async function getHomeData() {
@@ -71,35 +72,74 @@ async function getHomeData() {
 
   // Get stats using individual queries for better type safety
   const totalStores = await prisma.store.count({ where: { isActive: true } });
-  const totalProducts = await prisma.product.count({ where: { status: "ACTIVE" } });
+  const totalProducts = await prisma.product.count({
+    where: { status: "ACTIVE" },
+  });
   const totalCategories = await prisma.category.count();
 
   return {
-    stores: stores.map(store => ({
-      ...store,
-      description: store.description || '',
-      theme: (store.theme as {
-        primary: string;
-        secondary: string;
-        bg: string;
-        fg: string;
-        accent: string;
-      }) || {
-        primary: '#3b82f6',
-        secondary: '#1d4ed8',
-        bg: '#ffffff',
-        fg: '#111827',
-        accent: '#f59e0b'
-      },
-    })),
-    products: products.map(product => ({
-      ...product,
-      description: product.description || '',
-      images: product.images.map(img => ({
-        ...img,
-        alt: img.alt || product.name,
-      })),
-    })),
+    stores: stores.map(
+      (store: {
+        id: string;
+        name: string;
+        slug: string;
+        description: string | null;
+        theme: {
+          primary: string;
+          secondary: string;
+          bg: string;
+          fg: string;
+          accent: string;
+        } | null;
+        _count: {
+          products: number;
+        };
+      }) => ({
+        ...store,
+        description: store.description || "",
+        theme: (store.theme as {
+          primary: string;
+          secondary: string;
+          bg: string;
+          fg: string;
+          accent: string;
+        }) || {
+          primary: "#3b82f6",
+          secondary: "#1d4ed8",
+          bg: "#ffffff",
+          fg: "#111827",
+          accent: "#f59e0b",
+        },
+      })
+    ),
+    products: products.map(
+      (product: {
+        id: string;
+        name: string;
+        slug: string;
+        description: string | null;
+        basePrice: number;
+        store: {
+          id: string;
+          name: string;
+          slug: string;
+        };
+        images: {
+          id: string;
+          url: string;
+          alt: string | null;
+        }[];
+      }) => ({
+        ...product,
+        description: product.description || "",
+        images: product.images.map(
+          (img: { id: string; url: string; alt: string | null }) => ({
+            ...img,
+            alt: img.alt || product.name,
+          })
+        ),
+      })
+    ),
     stats: { totalStores, totalProducts, totalCategories },
   };
 }

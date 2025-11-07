@@ -18,10 +18,13 @@ import {
   X,
   Image as ImageIcon,
   Package,
-  Zap
+  Zap,
+  Sparkles,
+  Edit
 } from "lucide-react";
 import { Header } from "@/components/layout/header";
 import { generateSKU, generateVariantSKU } from "@/lib/sku-generator";
+import { cn } from "@/lib/utils";
 
 interface Store {
   id: string;
@@ -433,10 +436,14 @@ export default function EditProductPage() {
     return (
       <div className="min-h-screen bg-gray-50">
         <Header />
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          <div className="animate-pulse">
-            <div className="h-8 bg-gray-200 rounded w-48 mb-4"></div>
-            <div className="h-96 bg-gray-200 rounded-lg"></div>
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          <div className="animate-pulse space-y-3">
+            <div className="h-10 bg-gradient-to-r from-gray-200 via-gray-100 to-gray-200 rounded-lg w-48"></div>
+            <div className="h-5 bg-gray-200 rounded w-96"></div>
+          </div>
+          <div className="space-y-6 mt-8">
+            <div className="h-64 bg-gradient-to-br from-gray-100 to-gray-50 rounded-xl border border-gray-200 animate-pulse"></div>
+            <div className="h-64 bg-gradient-to-br from-gray-100 to-gray-50 rounded-xl border border-gray-200 animate-pulse"></div>
           </div>
         </div>
       </div>
@@ -449,41 +456,51 @@ export default function EditProductPage() {
 
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header */}
-        <div className="flex items-center justify-between mb-8">
-          <div className="flex items-center space-x-4">
+        <div className="space-y-4 mb-8">
             <Link href="/dashboard/products">
-              <Button variant="ghost" size="sm">
+            <Button variant="ghost" size="sm" className="mb-4 hover:bg-gray-100">
                 <ArrowLeft className="h-4 w-4 mr-2" />
                 Back to Products
               </Button>
             </Link>
-            <div>
-              <h1 className="text-3xl font-bold text-gray-900">Edit Product</h1>
-              <p className="text-gray-600 mt-1">
-                Update product information and variants
-              </p>
+          <div className="space-y-2">
+            <div className="flex items-center space-x-3">
+              <div className="p-2 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg shadow-lg shadow-blue-500/20">
+                <Edit className="h-5 w-5 text-white" />
             </div>
+              <h1 className="text-3xl font-bold bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 bg-clip-text text-transparent">
+                Edit Product
+              </h1>
+            </div>
+            <p className="text-gray-500 text-sm flex items-center space-x-2 ml-11">
+              <Sparkles className="h-3.5 w-3.5" />
+              <span>Update product information and variants</span>
+            </p>
           </div>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-8">
           {/* Basic Information */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center space-x-2">
-                <Package className="h-5 w-5" />
-                <span>Basic Information</span>
+          <Card className="border-0 shadow-lg hover:shadow-xl transition-shadow duration-300">
+            <CardHeader className="border-b border-gray-100 bg-gradient-to-r from-gray-50/50 to-white">
+              <CardTitle className="flex items-center space-x-2 text-lg">
+                <div className="p-1.5 bg-blue-100 rounded-lg">
+                  <Package className="h-5 w-5 text-blue-600" />
+                </div>
+                <span className="font-semibold">Basic Information</span>
               </CardTitle>
             </CardHeader>
-            <CardContent className="space-y-6">
+            <CardContent className="p-6 space-y-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-2">
-                  <Label htmlFor="storeId">Store *</Label>
+                  <Label htmlFor="storeId" className="text-sm font-semibold text-gray-700">
+                    Store *
+                  </Label>
                   <Select
                     value={formData.storeId}
                     onValueChange={(value) => handleInputChange("storeId", value)}
                   >
-                    <SelectTrigger>
+                    <SelectTrigger className={cn("border-2 focus:border-blue-500 transition-all duration-200", errors.storeId && "border-red-500")}>
                       <SelectValue placeholder="Select a store" />
                     </SelectTrigger>
                     <SelectContent>
@@ -498,13 +515,15 @@ export default function EditProductPage() {
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="name">Product Name *</Label>
+                  <Label htmlFor="name" className="text-sm font-semibold text-gray-700">
+                    Product Name *
+                  </Label>
                   <Input
                     id="name"
                     value={formData.name}
                     onChange={(e) => handleInputChange("name", e.target.value)}
                     placeholder="Enter product name"
-                    className={errors.name ? "border-red-500" : ""}
+                    className={cn("border-2 focus:border-blue-500 transition-all duration-200", errors.name && "border-red-500")}
                   />
                   {errors.name && <p className="text-sm text-red-500">{errors.name}</p>}
                 </div>
@@ -521,7 +540,9 @@ export default function EditProductPage() {
 
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div className="space-y-2">
-                  <Label htmlFor="basePrice">Base Price (IDR) *</Label>
+                  <Label htmlFor="basePrice" className="text-sm font-semibold text-gray-700">
+                    Base Price (IDR) *
+                  </Label>
                   <Input
                     id="basePrice"
                     type="number"
@@ -529,18 +550,20 @@ export default function EditProductPage() {
                     onChange={(e) => handleInputChange("basePrice", parseInt(e.target.value) || 0)}
                     placeholder="0"
                     min="0"
-                    className={errors.basePrice ? "border-red-500" : ""}
+                    className={cn("border-2 focus:border-blue-500 transition-all duration-200", errors.basePrice && "border-red-500")}
                   />
                   {errors.basePrice && <p className="text-sm text-red-500">{errors.basePrice}</p>}
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="status">Status</Label>
+                  <Label htmlFor="status" className="text-sm font-semibold text-gray-700">
+                    Status
+                  </Label>
                   <Select
                     value={formData.status}
                     onValueChange={(value: "DRAFT" | "ACTIVE" | "ARCHIVED") => handleInputChange("status", value)}
                   >
-                    <SelectTrigger>
+                    <SelectTrigger className="border-2 focus:border-blue-500 transition-all duration-200">
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
@@ -553,13 +576,18 @@ export default function EditProductPage() {
               </div>
 
               <div className="space-y-2">
-                <Label>Categories *</Label>
+                <Label className="text-sm font-semibold text-gray-700">Categories *</Label>
                 <div className="flex flex-wrap gap-2">
                   {categories.map((category) => (
                     <Badge
                       key={category.id}
                       variant={formData.categories.includes(category.id) ? "default" : "outline"}
-                      className="cursor-pointer"
+                      className={cn(
+                        "cursor-pointer transition-all duration-200 font-medium",
+                        formData.categories.includes(category.id)
+                          ? "bg-purple-100 text-purple-700 border-purple-200 hover:bg-purple-200"
+                          : "hover:bg-gray-100"
+                      )}
                       onClick={() => handleCategoryToggle(category.id)}
                     >
                       {category.name}
@@ -572,15 +600,17 @@ export default function EditProductPage() {
           </Card>
 
           {/* Product Images */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center space-x-2">
-                <ImageIcon className="h-5 w-5" />
-                <span>Product Images</span>
+          <Card className="border-0 shadow-lg hover:shadow-xl transition-shadow duration-300">
+            <CardHeader className="border-b border-gray-100 bg-gradient-to-r from-gray-50/50 to-white">
+              <CardTitle className="flex items-center space-x-2 text-lg">
+                <div className="p-1.5 bg-green-100 rounded-lg">
+                  <ImageIcon className="h-5 w-5 text-green-600" />
+                </div>
+                <span className="font-semibold">Product Images</span>
               </CardTitle>
             </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center">
+            <CardContent className="p-6 space-y-4">
+              <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-blue-400 transition-colors duration-200">
                 <div className="space-y-4">
                   <ImageIcon className="mx-auto h-12 w-12 text-gray-400" />
                   <div>
@@ -611,16 +641,16 @@ export default function EditProductPage() {
                       <img
                         src={preview}
                         alt={`Preview ${index + 1}`}
-                        className="w-full h-32 object-cover rounded-lg"
+                        className="w-full h-32 object-cover rounded-lg ring-2 ring-gray-100 group-hover:ring-blue-200 transition-all duration-200"
                       />
                       <button
                         type="button"
                         onClick={() => handleRemoveImage(index)}
-                        className="absolute top-2 right-2 bg-red-500 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity"
+                        className="absolute top-2 right-2 bg-red-500 hover:bg-red-600 text-white rounded-full p-1.5 opacity-0 group-hover:opacity-100 transition-all duration-200 shadow-lg"
                       >
                         <X className="h-4 w-4" />
                       </button>
-                      <div className="absolute bottom-2 left-2 bg-black bg-opacity-50 text-white text-xs px-2 py-1 rounded">
+                      <div className="absolute bottom-2 left-2 bg-black bg-opacity-70 text-white text-xs px-2 py-1 rounded font-semibold">
                         {index + 1}
                       </div>
                     </div>
@@ -633,42 +663,46 @@ export default function EditProductPage() {
           </Card>
 
           {/* Product Options */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center justify-between">
+          <Card className="border-0 shadow-lg hover:shadow-xl transition-shadow duration-300">
+            <CardHeader className="border-b border-gray-100 bg-gradient-to-r from-gray-50/50 to-white">
+              <CardTitle className="flex items-center justify-between text-lg">
                 <div className="flex items-center space-x-2">
-                  <Zap className="h-5 w-5" />
-                  <span>Product Options</span>
+                  <div className="p-1.5 bg-purple-100 rounded-lg">
+                    <Zap className="h-5 w-5 text-purple-600" />
+                  </div>
+                  <span className="font-semibold">Product Options</span>
                 </div>
                 <Button
                   type="button"
                   variant="outline"
                   size="sm"
                   onClick={addOptionType}
+                  className="border-2 hover:bg-gray-50 transition-all duration-200"
                 >
                   <Plus className="h-4 w-4 mr-2" />
                   Add Option Type
                 </Button>
               </CardTitle>
-              <p className="text-sm text-gray-600">
+              <p className="text-sm text-gray-500 mt-2">
                 Define product options like Size, Color, etc. Variants will be generated automatically.
               </p>
             </CardHeader>
-            <CardContent className="space-y-6">
+            <CardContent className="p-6 space-y-6">
               {formData.optionTypes.map((type, typeIndex) => (
-                <div key={type.id} className="border rounded-lg p-4 space-y-4">
+                <div key={type.id} className="border-2 border-gray-200 rounded-lg p-4 space-y-4 hover:border-blue-300 transition-colors duration-200">
                   <div className="flex items-center justify-between">
                     <Input
                       placeholder="Option type name (e.g., Size, Color)"
                       value={type.name}
                       onChange={(e) => updateOptionType(type.id, 'name', e.target.value)}
-                      className={`w-64 ${errors[`optionType_${typeIndex}_name`] ? "border-red-500" : ""}`}
+                      className={cn("w-64 border-2 focus:border-blue-500 transition-all duration-200", errors[`optionType_${typeIndex}_name`] && "border-red-500")}
                     />
                     <Button
                       type="button"
                       variant="outline"
                       size="sm"
                       onClick={() => addOptionValue(type.id)}
+                      className="border-2 hover:bg-gray-50 transition-all duration-200"
                     >
                       <Plus className="h-4 w-4 mr-1" />
                       Add Value
@@ -678,7 +712,7 @@ export default function EditProductPage() {
                       variant="outline"
                       size="sm"
                       onClick={() => removeOptionType(type.id)}
-                      className="text-red-600 hover:text-red-700"
+                      className="text-red-600 hover:text-red-700 hover:bg-red-50 border-2 border-red-200 transition-all duration-200"
                     >
                       <X className="h-4 w-4" />
                     </Button>
@@ -691,7 +725,7 @@ export default function EditProductPage() {
                           placeholder={`Value ${valueIndex + 1}`}
                           value={value}
                           onChange={(e) => updateOptionValue(type.id, valueIndex, e.target.value)}
-                          className="w-32"
+                          className="w-32 border-2 focus:border-blue-500 transition-all duration-200"
                         />
                         {type.values.length > 1 && (
                           <Button
@@ -699,7 +733,7 @@ export default function EditProductPage() {
                             variant="ghost"
                             size="sm"
                             onClick={() => removeOptionValue(type.id, valueIndex)}
-                            className="h-8 w-8 p-0"
+                            className="h-8 w-8 p-0 text-red-600 hover:text-red-700 hover:bg-red-50"
                           >
                             <X className="h-3 w-3" />
                           </Button>
@@ -715,7 +749,7 @@ export default function EditProductPage() {
                   <Button
                     type="button"
                     onClick={generateVariantsFromOptions}
-                    className="bg-green-600 hover:bg-green-700"
+                    className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 shadow-lg shadow-green-500/25 transition-all duration-200"
                   >
                     <Zap className="h-4 w-4 mr-2" />
                     Generate Variants from Options
@@ -727,27 +761,32 @@ export default function EditProductPage() {
 
           {/* Generated Variants */}
           {formData.variants.length > 0 && (
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center space-x-2">
-                  <Package className="h-5 w-5" />
-                  <span>Generated Variants ({formData.variants.length})</span>
+            <Card className="border-0 shadow-lg hover:shadow-xl transition-shadow duration-300">
+              <CardHeader className="border-b border-gray-100 bg-gradient-to-r from-gray-50/50 to-white">
+                <CardTitle className="flex items-center space-x-2 text-lg">
+                  <div className="p-1.5 bg-orange-100 rounded-lg">
+                    <Package className="h-5 w-5 text-orange-600" />
+                  </div>
+                  <span className="font-semibold">Generated Variants</span>
+                  <Badge variant="secondary" className="bg-gray-100 text-gray-700 font-semibold">
+                    {formData.variants.length}
+                  </Badge>
                 </CardTitle>
-                <p className="text-sm text-gray-600">
+                <p className="text-sm text-gray-500 mt-2">
                   Configure pricing and stock for each variant. SKUs are auto-generated.
                 </p>
               </CardHeader>
-              <CardContent>
+              <CardContent className="p-6">
                 <div className="space-y-4">
                   {formData.variants.map((variant, index) => (
-                    <div key={index} className="border rounded-lg p-4 space-y-4">
+                    <div key={index} className="border-2 border-gray-200 rounded-lg p-4 space-y-4 hover:border-blue-300 transition-colors duration-200">
                       <div className="flex items-center justify-between">
-                        <h4 className="font-medium">Variant {index + 1}</h4>
+                        <h4 className="font-semibold text-gray-900">Variant {index + 1}</h4>
                         <div className="flex items-center gap-2">
                           {variant.optionValues.length > 0 && (
                             <div className="flex flex-wrap gap-1">
                               {variant.optionValues.map((ov, ovIndex) => (
-                                <Badge key={ovIndex} variant="outline" className="text-xs">
+                                <Badge key={ovIndex} variant="secondary" className="text-xs bg-purple-50 text-purple-700 border-purple-200 font-medium">
                                   {ov.typeName}: {ov.value}
                                 </Badge>
                               ))}
@@ -758,7 +797,7 @@ export default function EditProductPage() {
                             variant="ghost"
                             size="sm"
                             onClick={() => regenerateSKU(index)}
-                            className="text-blue-600"
+                            className="text-blue-600 hover:text-blue-700 hover:bg-blue-50"
                           >
                             Regenerate SKU
                           </Button>
@@ -767,24 +806,24 @@ export default function EditProductPage() {
 
                       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <div className="space-y-2">
-                          <Label>SKU</Label>
+                          <Label className="text-sm font-semibold text-gray-700">SKU</Label>
                           <Input
                             value={variant.sku || ""}
                             onChange={(e) => updateVariant(index, "sku", e.target.value)}
                             placeholder="Auto-generated SKU"
-                            className="font-mono text-sm"
+                            className="font-mono text-sm border-2 focus:border-blue-500 transition-all duration-200"
                           />
                         </div>
 
                         <div className="space-y-2">
-                          <Label>Price (IDR) *</Label>
+                          <Label className="text-sm font-semibold text-gray-700">Price (IDR) *</Label>
                           <Input
                             type="number"
                             value={variant.priceAbsolute}
                             onChange={(e) => updateVariant(index, "priceAbsolute", parseInt(e.target.value) || 0)}
                             placeholder="0"
                             min="0"
-                            className={errors[`variant_${index}_price`] ? "border-red-500" : ""}
+                            className={cn("border-2 focus:border-blue-500 transition-all duration-200", errors[`variant_${index}_price`] && "border-red-500")}
                           />
                           {errors[`variant_${index}_price`] && (
                             <p className="text-sm text-red-500">{errors[`variant_${index}_price`]}</p>
@@ -792,14 +831,14 @@ export default function EditProductPage() {
                         </div>
 
                         <div className="space-y-2">
-                          <Label>Stock *</Label>
+                          <Label className="text-sm font-semibold text-gray-700">Stock *</Label>
                           <Input
                             type="number"
                             value={variant.stock}
                             onChange={(e) => updateVariant(index, "stock", parseInt(e.target.value) || 0)}
                             placeholder="0"
                             min="0"
-                            className={errors[`variant_${index}_stock`] ? "border-red-500" : ""}
+                            className={cn("border-2 focus:border-blue-500 transition-all duration-200", errors[`variant_${index}_stock`] && "border-red-500")}
                           />
                           {errors[`variant_${index}_stock`] && (
                             <p className="text-sm text-red-500">{errors[`variant_${index}_stock`]}</p>
@@ -809,10 +848,10 @@ export default function EditProductPage() {
 
                       <div className="flex items-center space-x-4 text-sm">
                         <div className="text-gray-600">
-                          Final Price: <span className="font-medium text-green-600">{formatPrice(variant.priceAbsolute)}</span>
+                          Final Price: <span className="font-semibold text-green-600">{formatPrice(variant.priceAbsolute)}</span>
                         </div>
                         <div className="text-gray-600">
-                          Stock: <span className={`font-medium ${variant.stock > 0 ? 'text-green-600' : 'text-red-600'}`}>
+                          Stock: <span className={cn("font-semibold", variant.stock > 0 ? 'text-green-600' : 'text-red-600')}>
                             {variant.stock} {variant.stock > 0 ? 'available' : 'out of stock'}
                           </span>
                         </div>
@@ -827,13 +866,17 @@ export default function EditProductPage() {
           )}
 
           {/* Actions */}
-          <div className="flex justify-end space-x-4">
+          <div className="flex justify-end space-x-4 pt-4 border-t border-gray-200">
             <Link href="/dashboard/products">
-              <Button variant="outline" disabled={isSaving}>
+              <Button variant="outline" disabled={isSaving} className="border-2 hover:bg-gray-50 transition-all duration-200">
                 Cancel
               </Button>
             </Link>
-            <Button type="submit" disabled={isSaving}>
+            <Button
+              type="submit"
+              disabled={isSaving}
+              className="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 shadow-lg shadow-blue-500/25 transition-all duration-200 hover:shadow-xl hover:shadow-blue-500/30 disabled:opacity-50 disabled:cursor-not-allowed"
+            >
               {isSaving ? (
                 <>
                   <div className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent mr-2" />

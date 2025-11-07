@@ -26,9 +26,11 @@ import {
   Package,
   Trash2,
   Zap,
+  Sparkles,
 } from "lucide-react";
 import { Header } from "@/components/layout/header";
 import { generateVariantSKU } from "@/lib/sku-generator";
+import { cn } from "@/lib/utils";
 
 interface Store {
   id: string;
@@ -408,39 +410,51 @@ export default function AddProductPage() {
 
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header */}
-        <div className="flex items-center space-x-4 mb-8">
+        <div className="space-y-4 mb-8">
           <Link href="/dashboard/products">
-            <Button variant="ghost" size="sm">
+            <Button variant="ghost" size="sm" className="mb-4 hover:bg-gray-100">
               <ArrowLeft className="h-4 w-4 mr-2" />
               Back to Products
             </Button>
           </Link>
-          <div>
-            <h1 className="text-3xl font-bold text-gray-900">Add New Product</h1>
-            <p className="text-gray-600 mt-1">
-              Create a new product with flexible variants
+          <div className="space-y-2">
+            <div className="flex items-center space-x-3">
+              <div className="p-2 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg shadow-lg shadow-blue-500/20">
+                <Plus className="h-5 w-5 text-white" />
+              </div>
+              <h1 className="text-3xl font-bold bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 bg-clip-text text-transparent">
+                Add New Product
+              </h1>
+            </div>
+            <p className="text-gray-500 text-sm flex items-center space-x-2 ml-11">
+              <Sparkles className="h-3.5 w-3.5" />
+              <span>Create a new product with flexible variants</span>
             </p>
           </div>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-8">
           {/* Basic Information */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center space-x-2">
-                <Package className="h-5 w-5" />
-                <span>Basic Information</span>
+          <Card className="border-0 shadow-lg hover:shadow-xl transition-shadow duration-300">
+            <CardHeader className="border-b border-gray-100 bg-gradient-to-r from-gray-50/50 to-white">
+              <CardTitle className="flex items-center space-x-2 text-lg">
+                <div className="p-1.5 bg-blue-100 rounded-lg">
+                  <Package className="h-5 w-5 text-blue-600" />
+                </div>
+                <span className="font-semibold">Basic Information</span>
               </CardTitle>
             </CardHeader>
-            <CardContent className="space-y-6">
+            <CardContent className="p-6 space-y-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-2">
-                  <Label htmlFor="storeId">Store *</Label>
+                  <Label htmlFor="storeId" className="text-sm font-semibold text-gray-700">
+                    Store *
+                  </Label>
                   <Select
                     value={formData.storeId}
                     onValueChange={(value) => handleInputChange("storeId", value)}
                   >
-                    <SelectTrigger>
+                    <SelectTrigger className={cn("border-2 focus:border-blue-500 transition-all duration-200", errors.storeId && "border-red-500")}>
                       <SelectValue placeholder="Select a store" />
                     </SelectTrigger>
                     <SelectContent>
@@ -455,13 +469,15 @@ export default function AddProductPage() {
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="name">Product Name *</Label>
+                  <Label htmlFor="name" className="text-sm font-semibold text-gray-700">
+                    Product Name *
+                  </Label>
                   <Input
                     id="name"
                     value={formData.name}
                     onChange={(e) => handleInputChange("name", e.target.value)}
                     placeholder="Enter product name"
-                    className={errors.name ? "border-red-500" : ""}
+                    className={cn("border-2 focus:border-blue-500 transition-all duration-200", errors.name && "border-red-500")}
                   />
                   {errors.name && <p className="text-sm text-red-500">{errors.name}</p>}
                 </div>
@@ -479,7 +495,9 @@ export default function AddProductPage() {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-2">
-                  <Label htmlFor="basePrice">Base Price (IDR) *</Label>
+                  <Label htmlFor="basePrice" className="text-sm font-semibold text-gray-700">
+                    Base Price (IDR) *
+                  </Label>
                   <Input
                     id="basePrice"
                     type="number"
@@ -487,18 +505,20 @@ export default function AddProductPage() {
                     onChange={(e) => handleInputChange("basePrice", parseInt(e.target.value) || 0)}
                     placeholder="0"
                     min="0"
-                    className={errors.basePrice ? "border-red-500" : ""}
+                    className={cn("border-2 focus:border-blue-500 transition-all duration-200", errors.basePrice && "border-red-500")}
                   />
                   {errors.basePrice && <p className="text-sm text-red-500">{errors.basePrice}</p>}
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="status">Status</Label>
+                  <Label htmlFor="status" className="text-sm font-semibold text-gray-700">
+                    Status
+                  </Label>
                   <Select
                     value={formData.status}
                     onValueChange={(value: "DRAFT" | "ACTIVE" | "ARCHIVED") => handleInputChange("status", value)}
                   >
-                    <SelectTrigger>
+                    <SelectTrigger className="border-2 focus:border-blue-500 transition-all duration-200">
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
@@ -511,13 +531,18 @@ export default function AddProductPage() {
               </div>
 
               <div className="space-y-2">
-                <Label>Categories *</Label>
+                <Label className="text-sm font-semibold text-gray-700">Categories *</Label>
                 <div className="flex flex-wrap gap-2">
                   {categories.map((category) => (
                     <Badge
                       key={category.id}
                       variant={formData.categories.includes(category.id) ? "default" : "outline"}
-                      className="cursor-pointer"
+                      className={cn(
+                        "cursor-pointer transition-all duration-200 font-medium",
+                        formData.categories.includes(category.id)
+                          ? "bg-purple-100 text-purple-700 border-purple-200 hover:bg-purple-200"
+                          : "hover:bg-gray-100"
+                      )}
                       onClick={() => handleCategoryToggle(category.id)}
                     >
                       {category.name}
@@ -530,15 +555,17 @@ export default function AddProductPage() {
           </Card>
 
           {/* Product Images */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center space-x-2">
-                <ImageIcon className="h-5 w-5" />
-                <span>Product Images</span>
+          <Card className="border-0 shadow-lg hover:shadow-xl transition-shadow duration-300">
+            <CardHeader className="border-b border-gray-100 bg-gradient-to-r from-gray-50/50 to-white">
+              <CardTitle className="flex items-center space-x-2 text-lg">
+                <div className="p-1.5 bg-green-100 rounded-lg">
+                  <ImageIcon className="h-5 w-5 text-green-600" />
+                </div>
+                <span className="font-semibold">Product Images</span>
               </CardTitle>
             </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center">
+            <CardContent className="p-6 space-y-4">
+              <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-blue-400 transition-colors duration-200">
                 <div className="space-y-4">
                   <ImageIcon className="mx-auto h-12 w-12 text-gray-400" />
                   <div>
@@ -569,16 +596,16 @@ export default function AddProductPage() {
                       <img
                         src={preview}
                         alt={`Preview ${index + 1}`}
-                        className="w-full h-32 object-cover rounded-lg"
+                        className="w-full h-32 object-cover rounded-lg ring-2 ring-gray-100 group-hover:ring-blue-200 transition-all duration-200"
                       />
                       <button
                         type="button"
                         onClick={() => handleRemoveImage(index)}
-                        className="absolute top-2 right-2 bg-red-500 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity"
+                        className="absolute top-2 right-2 bg-red-500 hover:bg-red-600 text-white rounded-full p-1.5 opacity-0 group-hover:opacity-100 transition-all duration-200 shadow-lg"
                       >
                         <X className="h-4 w-4" />
                       </button>
-                      <div className="absolute bottom-2 left-2 bg-black bg-opacity-50 text-white text-xs px-2 py-1 rounded">
+                      <div className="absolute bottom-2 left-2 bg-black bg-opacity-70 text-white text-xs px-2 py-1 rounded font-semibold">
                         {index + 1}
                       </div>
                     </div>
@@ -591,43 +618,47 @@ export default function AddProductPage() {
           </Card>
 
           {/* Product Options */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center justify-between">
+          <Card className="border-0 shadow-lg hover:shadow-xl transition-shadow duration-300">
+            <CardHeader className="border-b border-gray-100 bg-gradient-to-r from-gray-50/50 to-white">
+              <CardTitle className="flex items-center justify-between text-lg">
                 <div className="flex items-center space-x-2">
-                  <Zap className="h-5 w-5" />
-                  <span>Product Options</span>
+                  <div className="p-1.5 bg-purple-100 rounded-lg">
+                    <Zap className="h-5 w-5 text-purple-600" />
+                  </div>
+                  <span className="font-semibold">Product Options</span>
                 </div>
                 <Button
                   type="button"
                   variant="outline"
                   size="sm"
                   onClick={addOptionType}
+                  className="border-2 hover:bg-gray-50 transition-all duration-200"
                 >
                   <Plus className="h-4 w-4 mr-2" />
                   Add Option Type
                 </Button>
               </CardTitle>
-              <p className="text-sm text-gray-600">
+              <p className="text-sm text-gray-500 mt-2">
                 Define product options like Size, Color, etc. If no options are defined, the product will have a single variant.
               </p>
             </CardHeader>
-            <CardContent className="space-y-6">
+            <CardContent className="p-6 space-y-6">
               {formData.optionTypes.map((type, typeIndex) => (
-                <div key={type.id} className="border rounded-lg p-4 space-y-4">
+                <div key={type.id} className="border-2 border-gray-200 rounded-lg p-4 space-y-4 hover:border-blue-300 transition-colors duration-200">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center space-x-2">
                       <Input
                         placeholder="Option type name (e.g., Size, Color)"
                         value={type.name}
                         onChange={(e) => updateOptionType(type.id, 'name', e.target.value)}
-                        className={`w-64 ${errors[`optionType_${typeIndex}_name`] ? "border-red-500" : ""}`}
+                        className={cn("w-64 border-2 focus:border-blue-500 transition-all duration-200", errors[`optionType_${typeIndex}_name`] && "border-red-500")}
                       />
                       <Button
                         type="button"
                         variant="outline"
                         size="sm"
                         onClick={() => addOptionValue(type.id)}
+                        className="border-2 hover:bg-gray-50 transition-all duration-200"
                       >
                         <Plus className="h-4 w-4 mr-1" />
                         Add Value
@@ -638,7 +669,7 @@ export default function AddProductPage() {
                       variant="outline"
                       size="sm"
                       onClick={() => removeOptionType(type.id)}
-                      className="text-red-600 hover:text-red-700"
+                      className="text-red-600 hover:text-red-700 hover:bg-red-50 border-2 border-red-200 transition-all duration-200"
                     >
                       <Trash2 className="h-4 w-4" />
                     </Button>
@@ -651,14 +682,14 @@ export default function AddProductPage() {
                           placeholder="Option value"
                           value={value}
                           onChange={(e) => updateOptionValue(type.id, valueIndex, e.target.value)}
-                          className="w-32"
+                          className="w-32 border-2 focus:border-blue-500 transition-all duration-200"
                         />
                         <Button
                           type="button"
                           variant="outline"
                           size="sm"
                           onClick={() => removeOptionValue(type.id, valueIndex)}
-                          className="text-red-600 hover:text-red-700"
+                          className="text-red-600 hover:text-red-700 hover:bg-red-50 border-2 border-red-200 transition-all duration-200"
                         >
                           <X className="h-3 w-3" />
                         </Button>
@@ -682,32 +713,39 @@ export default function AddProductPage() {
           </Card>
 
           {/* Generated Variants */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center space-x-2">
-                <Package className="h-5 w-5" />
-                <span>Generated Variants ({formData.variants.length})</span>
+          <Card className="border-0 shadow-lg hover:shadow-xl transition-shadow duration-300">
+            <CardHeader className="border-b border-gray-100 bg-gradient-to-r from-gray-50/50 to-white">
+              <CardTitle className="flex items-center space-x-2 text-lg">
+                <div className="p-1.5 bg-orange-100 rounded-lg">
+                  <Package className="h-5 w-5 text-orange-600" />
+                </div>
+                <span className="font-semibold">Generated Variants</span>
+                <Badge variant="secondary" className="bg-gray-100 text-gray-700 font-semibold">
+                  {formData.variants.length}
+                </Badge>
               </CardTitle>
-              <p className="text-sm text-gray-600">
+              <p className="text-sm text-gray-500 mt-2">
                 Variants are automatically generated based on your product options. If no options are defined, a single default variant will be created.
               </p>
             </CardHeader>
-            <CardContent>
+            <CardContent className="p-6">
               {formData.variants.length > 0 ? (
                 <div className="space-y-4">
                   {formData.variants.map((variant, index) => (
-                    <div key={index} className="border rounded-lg p-4 space-y-4">
+                    <div key={index} className="border-2 border-gray-200 rounded-lg p-4 space-y-4 hover:border-blue-300 transition-colors duration-200">
                       <div className="flex items-center justify-between">
                         <div>
-                          <h4 className="font-medium">Variant {index + 1}</h4>
-                          <div className="flex items-center space-x-2 text-sm text-gray-600">
-                            <span>SKU:</span>
-                            <Badge variant="outline">{variant.generatedSKU}</Badge>
+                          <h4 className="font-semibold text-gray-900">Variant {index + 1}</h4>
+                          <div className="flex items-center space-x-2 text-sm text-gray-600 mt-1">
+                            <span className="font-medium">SKU:</span>
+                            <Badge variant="outline" className="bg-gray-50 text-gray-700 font-mono text-xs">
+                              {variant.generatedSKU}
+                            </Badge>
                           </div>
                           {variant.options.length > 0 && (
-                            <div className="flex flex-wrap gap-1 mt-1">
+                            <div className="flex flex-wrap gap-1 mt-2">
                               {variant.options.map((opt, i) => (
-                                <Badge key={i} variant="secondary" className="text-xs">
+                                <Badge key={i} variant="secondary" className="text-xs bg-purple-50 text-purple-700 border-purple-200 font-medium">
                                   {opt.typeName}: {opt.value}
                                 </Badge>
                               ))}
@@ -718,30 +756,32 @@ export default function AddProductPage() {
 
                       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <div className="space-y-2">
-                          <Label>Price (IDR)</Label>
+                          <Label className="text-sm font-semibold text-gray-700">Price (IDR)</Label>
                           <Input
                             type="number"
                             value={variant.priceAbsolute}
                             onChange={(e) => updateVariant(index, 'priceAbsolute', parseInt(e.target.value) || 0)}
                             placeholder="0"
                             min="0"
+                            className="border-2 focus:border-blue-500 transition-all duration-200"
                           />
                         </div>
 
                         <div className="space-y-2">
-                          <Label>Stock</Label>
+                          <Label className="text-sm font-semibold text-gray-700">Stock</Label>
                           <Input
                             type="number"
                             value={variant.stock}
                             onChange={(e) => updateVariant(index, 'stock', parseInt(e.target.value) || 0)}
                             placeholder="0"
                             min="0"
+                            className="border-2 focus:border-blue-500 transition-all duration-200"
                           />
                         </div>
 
                         <div className="space-y-2">
-                          <Label>Final Price</Label>
-                          <div className="font-medium text-green-600">
+                          <Label className="text-sm font-semibold text-gray-700">Final Price</Label>
+                          <div className="font-semibold text-green-600 text-lg">
                             {formatPrice(variant.priceAbsolute)}
                           </div>
                         </div>
@@ -750,8 +790,13 @@ export default function AddProductPage() {
                   ))}
                 </div>
               ) : (
-                <div className="text-center py-8 text-gray-500">
-                  {formData.name ? "Variants will be shown here once you add options or set a base price" : "Enter a product name first"}
+                <div className="text-center py-12">
+                  <div className="w-16 h-16 bg-gradient-to-br from-gray-100 to-gray-50 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <Package className="h-8 w-8 text-gray-400" />
+                  </div>
+                  <p className="text-gray-500 font-medium">
+                    {formData.name ? "Variants will be shown here once you add options or set a base price" : "Enter a product name first"}
+                  </p>
                 </div>
               )}
 
@@ -760,13 +805,17 @@ export default function AddProductPage() {
           </Card>
 
           {/* Actions */}
-          <div className="flex justify-end space-x-4">
+          <div className="flex justify-end space-x-4 pt-4 border-t border-gray-200">
             <Link href="/dashboard/products">
-              <Button variant="outline" disabled={isSaving}>
+              <Button variant="outline" disabled={isSaving} className="border-2 hover:bg-gray-50 transition-all duration-200">
                 Cancel
               </Button>
             </Link>
-            <Button type="submit" disabled={isSaving}>
+            <Button
+              type="submit"
+              disabled={isSaving}
+              className="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 shadow-lg shadow-blue-500/25 transition-all duration-200 hover:shadow-xl hover:shadow-blue-500/30 disabled:opacity-50 disabled:cursor-not-allowed"
+            >
               {isSaving ? (
                 <>
                   <div className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent mr-2" />
