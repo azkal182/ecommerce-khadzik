@@ -18,9 +18,9 @@ export async function generateStaticParams() {
   }));
 }
 
-export async function generateMetadata(
-  { params }: ProductPageProps
-): Promise<Metadata> {
+export async function generateMetadata({
+  params,
+}: ProductPageProps): Promise<Metadata> {
   const { slug } = await params;
   const product = await prisma.product.findUnique({
     where: { slug },
@@ -44,7 +44,8 @@ export async function generateMetadata(
 
   return {
     title: `${product.name} - ${product.store.name}`,
-    description: product.description || `Shop ${product.name} at ${product.store.name}`,
+    description:
+      product.description || `Shop ${product.name} at ${product.store.name}`,
   };
 }
 
@@ -91,14 +92,43 @@ export default async function ProductPage({ params }: ProductPageProps) {
         orderBy: { order: "asc" },
         take: 1,
       },
+      categories: {
+        include: { category: true },
+      },
+      optionTypes: {
+        include: { values: true },
+      },
+      variants: {
+        include: {
+          optionValues: {
+            include: { type: true },
+          },
+        },
+      },
     },
     take: 4,
     orderBy: { createdAt: "desc" },
   });
 
+  // Transform product to match expected type
+  const transformedProduct = {
+    ...product,
+    store: {
+      ...product.store,
+      theme:
+        (product.store.theme as {
+          primary: string;
+          secondary: string;
+          bg: string;
+          fg: string;
+          accent: string;
+        } | null) || null,
+    },
+  };
+
   return (
     <ProductDetailClient
-      product={product}
+      product={transformedProduct}
       relatedProducts={relatedProducts}
       storeSlug={product.store.slug}
     />
